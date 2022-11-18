@@ -7,48 +7,43 @@
 	  (remainder 1 mod)
 	  (if (even power)
 		  (fast-exp-mod (remainder (sq base) mod) (/ power 2) mod)
-		  (remainder (* base (fast-exp-mod base (- power 1)) mod) mod))))
+		  (remainder (* base (fast-exp-mod base (- power 1) mod)) mod))))
+
+(define (fermat-test n i)
+	(let ((themod (fast-exp-mod i n n)))
+		;; (newline )(display "fermat-test ") (display n) (display " ") (display i) (display (= themod i))
+		(= themod i)))
+
+(define (fermat-test-with-random n)
+	(fermat-test n (+ 1 (random (- n 1)))))
+
+(define (test-prime n times)
+	(if (= times 0) #t
+		(if (fermat-test-with-random n) (test-prime n (- times 1))
+			#f)))
+	
+(define (test-prime-default n) (test-prime n 1000))
+
+(define (test-carmichael n)
+	(define (test-carmichael-iter n i)
+		(if (= i n) #t
+		(if (fermat-test n i) (test-carmichael-iter n (+ 1 i))
+			#f)))
+	(test-carmichael-iter n 1))
 
 
 
-(define (fermat-test n)
-	(define (try-it a) (= (fast-exp-mod a n n) a))
-	(try-it (+ 1 (random (- n 1)))))
+(test-prime-default 123)
+(test-prime-default 23456)
+(test-prime-default 1323532467787872)
+(test-prime-default 12)
+(test-prime-default 79)
+(test-prime-default 81)
+(test-prime-default 56)
 
-(define (fast-prime? n times)
-	(cond
-		((= times 0) true)
-		((fermat-test n) (fast-prime? n (- times 1)))
-		(else false)))
-
-(define (timed-prime-test n)
-	(start-prime-test n (runtime)))
-
-(define (start-prime-test n start-time)
-	;; (newline)
-	;; (display "start-prime-test ") (display n) (display " ") (display start-time)
-	(if (fast-prime? n 100) (report-prime n (- (runtime) start-time))))
-		
-(define (report-prime n elapsed-time)
-	(newline)
-	(display n)
-	(display " *** ")
-	(display elapsed-time))
-
-(define (search-for-primes start end)
-	(timed-prime-test start)
-	(if (< start end) (search-for-primes (+ 1 start) end))
-	end)
-
-(define (test-carimchel-iter n i)
-	())
-
-(define (test-carmichel n))
-
-(search-for-primes 10000000000000 10000000001000)
-
-(define (expmod base exp m)
-    (cond
-    ((= exp 0) 1)
-    ((even? exp) (remainder (* (expmod base (/ exp 2) m) (expmod base (/ exp 2) m)) m))
-	(else (remainder (* base (expmod base (- exp 1) m)) m))))
+(test-prime-default 561)
+(test-prime-default 1105)
+(test-prime-default 1729)
+(test-prime-default 2465)
+(test-prime-default 2821)
+(test-prime-default 6601)
