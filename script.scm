@@ -1,3 +1,4 @@
+(define (even? x) (= (remainder x 2) 0))
 (define (sq x) (* x x))
 (define (cube x) (* (sq x) x))
 (define (incr x) (+ 1 x))
@@ -15,7 +16,17 @@
 		(sum f (+ a (/ dx 2.0)) add-dx b)
 		dx))
 
-;; (define (integral-simpsons))
+(define (integral-simpsons f a b n)
+	(let ((h (/ (- b a) n)))
+		(define (simpsons-term k)
+			(let ((y-k (f (+ a (* k h)))))
+				(cond
+					((or (= k n) (= k 0)) y-k)
+					((even? k) (* 2 y-k))
+					(else (* 4 y-k)))))
+		(*
+			(/ h 3.0)
+			(sum simpsons-term 0 1+ n))))
 
 
-(integral cube 0 1 0.001)
+(integral-simpsons (lambda (x) x) 0 1 100)
