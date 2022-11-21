@@ -3,7 +3,6 @@
 (define (even n) (= 0 (remainder n 2)))
 
 (define (expmod base power mod)
-	;; (display "\texpmod ") (display base) (display " ") (display power) (display " ") (display mod) (newline)
 	(if (= power 0)
 		1
 		(if (even power)
@@ -19,13 +18,8 @@
 			(remainder (* base (expmod base (- power 1) mod)) mod))))
 
 
-(expmod 7 9 19)
-
-;; returns true if a is
 (define (miller-rabin-witness? n a)
-	;; (display "miller-rabin-witness asked if ") (display a) (display " is a witness of ") (display n) (display ": ") (display "expmod") (display " ") (display a) (display " ") (display (- n 1)) (display " ") (display n) (display " will be called") (newline)
 	(let ((result (expmod a (- n 1) n)))
-		;; (display "\t") (display result) (newline)
 		(if (= result 0)
 			#t
 			(not (= result 1)))))
@@ -33,7 +27,6 @@
 (define (random-till n) (+ 1 (random (- n 1))))
 
 (define (miller-rabin-prime-test n times)
-	;; (newline) (display "miller-rabin-prime-test ") (display n) (display " ") (display times) (newline)
 	(if (= times 0)
 		#t
 		(if (miller-rabin-witness? n (random-till n))
