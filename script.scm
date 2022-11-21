@@ -9,7 +9,13 @@
 			(term a)
 			(sum term (next a) next b))))
 
-(define (sum-cubes a b)
-	(sum cube a incr b))
+(define (integral f a b dx)
+	(define (add-dx x) (+ x dx))
+	(*
+		(sum f (+ a (/ dx 2.0)) add-dx b)
+		dx))
 
-(sum-cubes 1 10)
+;; (define (integral-simpsons))
+
+
+(integral cube 0 1 0.001)
