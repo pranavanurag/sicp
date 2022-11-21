@@ -1,51 +1,15 @@
 (define (sq x) (* x x))
+(define (cube x) (* (sq x) x))
+(define (incr x) (+ 1 x))
 
-(define (even n) (= 0 (remainder n 2)))
+(define (sum term a next b)
+	(if (> a b)
+		0
+		(+
+			(term a)
+			(sum term (next a) next b))))
 
-(define (expmod base power mod)
-	(if (= power 0)
-		1
-		(if (even power)
-			(let ((potential-non-trivial-sqrt (expmod base (/ power 2) mod)))
-				(let ((the-square (sq potential-non-trivial-sqrt)))
-					(if (and
-							(not (= -1 potential-non-trivial-sqrt))
-							(and
-								(not (= 1 potential-non-trivial-sqrt))
-								(= the-square 1)))
-						0
-						(remainder the-square mod))))
-			(remainder (* base (expmod base (- power 1) mod)) mod))))
+(define (sum-cubes a b)
+	(sum cube a incr b))
 
-
-(define (miller-rabin-witness? n a)
-	(let ((result (expmod a (- n 1) n)))
-		(if (= result 0)
-			#t
-			(not (= result 1)))))
-
-(define (random-till n) (+ 1 (random (- n 1))))
-
-(define (miller-rabin-prime-test n times)
-	(if (= times 0)
-		#t
-		(if (miller-rabin-witness? n (random-till n))
-			#f
-			(miller-rabin-prime-test n (- times 1)))))
-
-(define (miller-rabin-prime? n)
-	(miller-rabin-prime-test n 100))
-
-(miller-rabin-prime? 11)
-(miller-rabin-prime? 12)
-(miller-rabin-prime? 13)
-(miller-rabin-prime? 14)
-(miller-rabin-prime? 15)
-(miller-rabin-prime? 16)
-(miller-rabin-prime? 17)
-(miller-rabin-prime? 18)
-(miller-rabin-prime? 19)
-(miller-rabin-prime? 47)
-(miller-rabin-prime? 42)
-(miller-rabin-prime? 32)
-(miller-rabin-prime? 4)
+(sum-cubes 1 10)
