@@ -1,26 +1,48 @@
-; (define (iterative-sum term a next b)
-;   (define (iter x result)
-;     (if (> x b)
-;       result
-;       (iter (next x) (+ result (term x)))))
-;   (iter a 0))
+(define (sq x) (* x x))
+(define (even n) (= 0 (remainder n 2)))
 
-(define (accumulate combiner null-value term a next b)
+(define (expmod base power mod)
+  (if (= power 0)
+    1
+    (if (even power)
+      (let ((potential-non-trivial-sqrt (expmod base (/ power 2) mod)))
+        (let ((the-square (sq potential-non-trivial-sqrt)))
+          (if (and
+                (not (= -1 potential-non-trivial-sqrt))
+                (and
+                  (not (= 1 potential-non-trivial-sqrt))
+                  (= the-square 1)))
+            0
+            (remainder the-square mod))))
+      (remainder (* base (expmod base (- power 1) mod)) mod))))
+
+
+(define (miller-rabin-witness? n a)
+  (let ((result (expmod a (- n 1) n)))
+    (if (= result 0)
+      #t
+      (not (= result 1)))))
+
+(define (random-till n) (+ 1 (random (- n 1))))
+
+(define (miller-rabin-prime-test n times)
+  (if (= times 0)
+    #t
+    (if (miller-rabin-witness? n (random-till n))
+      #f
+      (miller-rabin-prime-test n (- times 1)))))
+
+(define (prime? n)
+  (miller-rabin-prime-test n 100))
+
+;; filter? i dont even know her!
+(define (filtered-accumulate combiner filter null-value term a next b)
   (if (> a b) null-value
-    (combiner (term a) (accumulate combiner null-value term (next a) next b))))
+    (if (filter a)
+      (combiner
+        (term a)
+        (filtered-accumulate combiner filter null-value term (next a) next b))
+      (filtered-accumulate combiner filter null-value term (next a) next b))))
 
-(define (accumulate-iterative combiner null-value term a next b)
-  (define (iter i result)
-    (if (> i b)
-      result
-      (iter (next i) (combiner result (term i)))))
-  (iter a null-value))
-  
-(define (sum term a next b)
-  (accumulate-iterative + 0 term a next b))
-
-(define (product term a next b)
-  (accumulate-iterative * 1 term a next b))
-
-(sum (lambda (x) x) 1 1+ 100)
-(sum (lambda (x) (* x x)) 1 1+ 10)
+(define (sum-of-sqd-primes)
+  )
