@@ -33,7 +33,9 @@
       (miller-rabin-prime-test n (- times 1)))))
 
 (define (prime? n)
-  (miller-rabin-prime-test n 100))
+  (if (= n 1)
+    #f
+    (miller-rabin-prime-test n 100)))
 
 ;; filter? i dont even know her!
 (define (filtered-accumulate combiner filter null-value term a next b)
@@ -44,5 +46,26 @@
         (filtered-accumulate combiner filter null-value term (next a) next b))
       (filtered-accumulate combiner filter null-value term (next a) next b))))
 
-(define (sum-of-sqd-primes)
-  )
+(define (sum-of-sqd-primes a b)
+  (filtered-accumulate + prime? 0 (lambda (x) (* x x)) a 1+ b))
+
+(sum-of-sqd-primes 1 10)
+
+
+(define (gcd a b)
+  (if (= b 0)
+    a
+    (gcd b (remainder a b))))
+
+
+(define (product-relative-primes n)
+  (filtered-accumulate
+    *
+    (lambda (x) (= (gcd x n) 1))
+    1
+    (lambda (x) x)
+    1
+    1+
+    n))
+
+(product-relative-primes 10)
