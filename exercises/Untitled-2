@@ -1,0 +1,1 @@
+sudo dd if=/Users/pranavanurag/Downloads/Win10_21H2_EnglishInternational_x64.iso of=/dev/rdisk4 bs=1m
