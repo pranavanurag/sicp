@@ -1,5 +1,13 @@
-(define (f g) (g 2))
+(define tolerance 0.001)
 
-;; (f (lambda (x) (* x x)))
+(define (fixed-point f first-guess)
+    (define (close-enough? v1 v2)
+        (< (abs (- v2 v1)) tolerance))
+    (define (try guess)
+        (let ((next (f guess)))
+            (if (close-enough? guess next)
+                guess
+                (try next))))
+    (try first-guess))
 
-(f f)
+(fixed-point cos 1.0)
