@@ -10,4 +10,11 @@
                 (try next))))
     (try first-guess))
 
-(fixed-point cos 1.0)
+;; x = 1 + 1/x, if x is the fixed-point
+;; x^2 = x + 1
+;; the roots of this eqn are phi and psi
+(define (golden-ratio)
+    (fixed-point (lambda (y) (+ 1 (/ 1 y)))
+    1.0))
+
+(golden-ratio)
