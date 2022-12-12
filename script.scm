@@ -1,3 +1,4 @@
+(define (average x y) (/ (+ x y) 2))
 (define tolerance 0.001)
 
 (define (fixed-point f first-guess)
@@ -5,16 +6,18 @@
         (< (abs (- v2 v1)) tolerance))
     (define (try guess)
         (let ((next (f guess)))
+            (newline) (display "try: guess = ") (display guess) (display ", next = ") (display next)
             (if (close-enough? guess next)
                 guess
                 (try next))))
     (try first-guess))
 
-;; x = 1 + 1/x, if x is the fixed-point
-;; x^2 = x + 1
-;; the roots of this eqn are phi and psi
-(define (golden-ratio)
-    (fixed-point (lambda (y) (+ 1 (/ 1 y)))
-    1.0))
+(define x-to-the-x-is-a-thousand
+    (fixed-point
+        (lambda (x) (/ (log 1000) (log x)))
+        10.0))
 
-(golden-ratio)
+(define x-to-the-x-is-a-thousand-avg-damp
+    (fixed-point
+        (lambda (x) (average x (/ (log 1000) (log x))))
+        10.0))
