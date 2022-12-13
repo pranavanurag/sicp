@@ -15,4 +15,4 @@
             (lambda (x) 1.0)
             k)))
 
-(golden-ratio 10)
+(golden-ratio 12)
