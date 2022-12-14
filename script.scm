@@ -1,11 +1,11 @@
 (define (cont-frac n d k)
-    (define (cont-frac-sub i)
-        (if (> i k)
-            0
-            (/
-                (n i)
-                (+ (d i) (cont-frac-sub (+ i 1))))))
-    (cont-frac-sub 1))
+    (define (cont-frac-iter i ans)
+        (if (< i 1)
+            ans
+            (cont-frac-iter
+                (- i 1)
+                (/ (n i) (+ (d i) ans)))))
+    (cont-frac-iter k 0))
 
 (define (golden-ratio k)
     (/
