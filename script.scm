@@ -7,12 +7,16 @@
                 (/ (n i) (+ (d i) ans)))))
     (cont-frac-iter k 0))
 
-(define (golden-ratio k)
-    (/
-        1
-        (cont-frac
-            (lambda (x) 1.0)
-            (lambda (x) 1.0)
-            k)))
+(define (e-minus-2 k)
+    (cont-frac
+        (lambda (x) 1.0)
+        (lambda (x)
+            (if (= 2 (remainder x 3))
+                (* (/ 2.0 3) (+ x 1))
+                1.0))
+        k))
 
-(golden-ratio 12)
+(define (e-approximation k)
+    (+ 2 (e-minus-2 k)))
+
+(e-approximation 20)
