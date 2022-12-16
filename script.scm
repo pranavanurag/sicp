@@ -1,5 +1,6 @@
 (define (average x y) (/ (+ x y) 2))
 (define (square x) (* x x))
+(define (cube x) (* (square x) x))
 
 (define (fixed-point f first-guess)
     (define tolerance 0.001)
@@ -26,4 +27,7 @@
 (define (newtons-method f first-guess)
     (fixed-point-of-transform f newtons-transform first-guess))
 
-(newtons-method (lambda (x) (- x 1)) 12)
+(define (cubic a b c)
+    (lambda (x) (+ (cube x) (+ (* a (square x)) (+ (* b x) c)))))
+
+(newtons-method (cubic -6 11 -6) 1.5)
