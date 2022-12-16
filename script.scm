@@ -1,6 +1,4 @@
-(define (double f)
-    (lambda (x) (f (f x))))
+(define (compose f g)
+  (lambda (x) (f (g x))))
 
-((double 1+) 2)
-
-(((double (double double)) 1+) 5)
+((compose square 1+) 6)
