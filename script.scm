@@ -1,3 +1,5 @@
+(define (average x y z) (/ (+ x (+ y z)) 3))
+
 (define (compose f g)
   (lambda (x) (f (g x))))
 
@@ -8,4 +10,11 @@
       (compose f (iter (- i 1)))))
   (iter times))
 
-((repeated square 2) 5)
+(define (smoothen f)
+  (define dx 0.001)
+  (lambda (x) (average (f x) (f (+ x dx)) (f (- x dx)))))
+
+(define (n-fold-smooth f n)
+  ((repeated smoothen n) f))
+
+((n-fold-smooth log 3) 12)
