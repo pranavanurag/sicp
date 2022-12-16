@@ -1,22 +1,30 @@
-(define (cont-frac n d k)
-    (define (cont-frac-iter i ans)
-        ; (newline) (display "cont-frac-iter, i = ") (display i) (display ", num = ") (display (n i)) (display ", den = ") (display (d i)) (display ", ans = ") (display ans)
-        (if (< i 1)
-            ans
-            (cont-frac-iter
-                (- i 1)
-                (/ (n i) (+ (d i) ans)))))
-    (cont-frac-iter k 0))
+(define (average x y) (/ (+ x y) 2))
+(define (square x) (* x x))
 
-(define (tan-cf x k)
-    (/
-        (cont-frac
-            (lambda (i) (* -1 (* x x)))
-            (lambda (i) (- (* 2 i) 1))
-            k)
-        (* -1 x)))
+(define (fixed-point f first-guess)
+    (define tolerance 0.001)
+    (define (close-enough? v1 v2)
+        (< (abs (- v2 v1)) tolerance))
+    (define (try guess)
+        (let ((next (f guess)))
+            ; (newline) (display "try: guess = ") (display guess) (display ", next = ") (display next)
+            (if (close-enough? guess next)
+                guess
+                (try next))))
+    (try first-guess))
+
+(define (average-damp f)
+    (lambda (x) (average x (f x))))
+
+(define (sqrt x)
+    (fixed-point (average-damp (lambda (y) (/ x y)))
+        1.0))
+
+(sqrt 100)
 
 
-(define pi 3.14159265359)
+(define (derivative f)
+    (define dx 0.001)
+    (lambda (x) (/ (- (f (+ x dx)) (f x)) dx)))
 
-(tan-cf (/ pi 4) 10)
+((derivative square) 10)
