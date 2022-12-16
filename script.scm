@@ -13,18 +13,17 @@
                 (try next))))
     (try first-guess))
 
-(define (average-damp f)
-    (lambda (x) (average x (f x))))
-
-(define (sqrt x)
-    (fixed-point (average-damp (lambda (y) (/ x y)))
-        1.0))
-
-(sqrt 100)
-
+(define (fixed-point-of-transform f transform guess)
+    (fixed-point (transform f) guess))
 
 (define (derivative f)
     (define dx 0.001)
     (lambda (x) (/ (- (f (+ x dx)) (f x)) dx)))
 
-((derivative square) 10)
+(define (newtons-transform f)
+    (lambda (x)(- x (/ (f x) ((derivative f) x)))))
+
+(define (newtons-method f first-guess)
+    (fixed-point-of-transform f newtons-transform first-guess))
+
+(newtons-method (lambda (x) (- x 1)) 12)
