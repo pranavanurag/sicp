@@ -20,7 +20,7 @@
         (try next))))
   (try first-guess))
 
-(define (average x y) (/ (+ x y) 2))
+(define (average x y) (/ (+ x y) 2.0))
 (define (average-damp f)
   (lambda (x) (average (f x) x)))
 
@@ -34,11 +34,11 @@
   ((repeated
     (lambda (i) (* i x))
     y)
-  1))
+  1.0))
 
 (define (nth-root x n damps)
   (fixed-point
-    ((repeated average-damp damps) (lambda (y) (/ (power x (- n 1)) y)))
-    2.0))
+    ((repeated average-damp damps) (lambda (y) (/ x (power y (- n 1)))))
+    1.5))
 
-(nth-root 16 2 1)
+(nth-root 16 4 2)
