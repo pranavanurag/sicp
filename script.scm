@@ -21,14 +21,9 @@
   (try first-guess))
 
 (define (average x y) (/ (+ x y) 2.0))
+
 (define (average-damp f)
   (lambda (x) (average (f x) x)))
-
-(define (sqrt n)
-  (fixed-point
-    (average-damp (lambda (x) (/ n x)))
-    2.0))
-
 
 (define (power x y) ;; only works for positive y
   ((repeated
