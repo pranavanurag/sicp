@@ -18,10 +18,20 @@
 ;
 ;(4-generator 3)
 
+(define (close-enough? x y)
+  (define tolerance 0.001)
+  (< (abs (- x y)) tolerance))
+
 (define (sqrt x)
   ((iterative-improve
-    (lambda (guess) (< (abs (- (square guess) x)) 0.001))
+    (lambda (guess) (close-enough? (square guess) x))
     (lambda (guess) (average guess (/ x guess))))
   1.0))
 
 (sqrt 4)
+
+(define (fixed-point f first-guess)
+  ((iterative-improve
+    (lambda (guess) (close-enough? guess (f guess)))
+    (lambda (guess) (f guess)))
+  first-guess))
