@@ -1,58 +1,26 @@
-(define (compose f g)
-  (lambda (x) (f (g x))))
-
-(define (repeated f times)
-  (define (iter i)
-    (if (= i 1)
-      f
-      (compose f (iter (- i 1)))))
-  (iter times))
-
-(define (fixed-point f first-guess)
-  (define tolerance 0.0001)
-  (define (close-enough? v1 v2)
-    (< (abs (- v2 v1)) tolerance))
-  (define (try guess)
-    (let ((next (f guess)))
-      (newline) (display "try: guess = ") (display guess) (display ", next = ") (display next)
-      (if (close-enough? guess next)
-        guess
-        (try next))))
-  (try first-guess))
-
+(define (square x) (* x x))
 (define (average x y) (/ (+ x y) 2.0))
 
-(define (average-damp f)
-  (lambda (x) (average (f x) x)))
+(define (iterative-improve verify-guess improve-guess)
+  (lambda (first-guess)
+    (define (try-guess guess)
+      (if (verify-guess guess)
+        guess
+        (try-guess (improve-guess guess))))
+    (try-guess first-guess)))
 
-(define (power x y)
-  (if (= y 0)
-    1.0
-    ((repeated (lambda (i) (* i x)) y) 1.0)))
+;(define 4-generator
+;  (iterative-improve
+;    (lambda (x)
+;      (define tolerance 0.01)
+;      (> tolerance (abs (- x 4))))
+;    (lambda (x) 4.0)))
+;
+;(4-generator 3)
 
-(define (nth-root-repeated-damps x n damps)
-  (fixed-point
-    ((repeated average-damp damps) (lambda (y) (/ x (power y (- n 1)))))
-    1.5))
+(define (sqrt x)
+  (iterative-improve
+    (lambda (guess) (< (abs (- (square guess) x)) 0.001))
+    (lambda (guess) (average guess (/ x guess)))))
 
-;(nth-root-repeated-damps 16 1 1)
-;(nth-root-repeated-damps 16 2 1)
-;(nth-root-repeated-damps 16 3 1)
-;(nth-root-repeated-damps 16 4 2)
-;(nth-root-repeated-damps 16 5 2)
-;(nth-root-repeated-damps 16 6 2)
-;(nth-root-repeated-damps 16 7 2)
-;(nth-root-repeated-damps 16 8 3)
-;(nth-root-repeated-damps 16 9 3)
-;(nth-root-repeated-damps 16 10 3)
-;(nth-root-repeated-damps 16 12 3)
-;(nth-root-repeated-damps 16 14 3)
-;(nth-root-repeated-damps 16 15 3)
-;(nth-root-repeated-damps 16 16 4)
-; nth-root-repeated-damps needs log2(n) average damps to converge!
-
-(define (log2 x)
-  (/ (log n) (log 2)))
-
-(define (nth-root x n)
-  (nth-root-repeated-damps x n (log2 n)))
+((sqrt 4) 1.0)
