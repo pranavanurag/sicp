@@ -9,15 +9,6 @@
         (try-guess (improve-guess guess))))
     (try-guess first-guess)))
 
-;(define 4-generator
-;  (iterative-improve
-;    (lambda (x)
-;      (define tolerance 0.01)
-;      (> tolerance (abs (- x 4))))
-;    (lambda (x) 4.0)))
-;
-;(4-generator 3)
-
 (define (close-enough? x y)
   (define tolerance 0.001)
   (< (abs (- x y)) tolerance))
@@ -27,8 +18,6 @@
     (lambda (guess) (close-enough? (square guess) x))
     (lambda (guess) (average guess (/ x guess))))
   1.0))
-
-(sqrt 4)
 
 (define (fixed-point f first-guess)
   ((iterative-improve
