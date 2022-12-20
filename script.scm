@@ -19,8 +19,9 @@
 ;(4-generator 3)
 
 (define (sqrt x)
-  (iterative-improve
+  ((iterative-improve
     (lambda (guess) (< (abs (- (square guess) x)) 0.001))
-    (lambda (guess) (average guess (/ x guess)))))
+    (lambda (guess) (average guess (/ x guess))))
+  1.0))
 
-((sqrt 4) 1.0)
+(sqrt 4)
