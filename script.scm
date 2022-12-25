@@ -1,26 +1,15 @@
-(define (square x) (* x x))
-(define (average x y) (/ (+ x y) 2.0))
+(define (make-rat n d) (cons n d))
+(define (numer x) (car x))
+(define (denom x) (cdr x))
 
-(define (iterative-improve verify-guess improve-guess)
-  (lambda (first-guess)
-    (define (try-guess guess)
-      (if (verify-guess guess)
-        guess
-        (try-guess (improve-guess guess))))
-    (try-guess first-guess)))
+(define x (make-rat 12 13))
 
-(define (close-enough? x y)
-  (define tolerance 0.001)
-  (< (abs (- x y)) tolerance))
+(define (print-rat x)
+    (newline)
+    (display (numer x))
+    (display "/")
+    (display (denom x)))
 
-(define (sqrt x)
-  ((iterative-improve
-    (lambda (guess) (close-enough? (square guess) x))
-    (lambda (guess) (average guess (/ x guess))))
-  1.0))
-
-(define (fixed-point f first-guess)
-  ((iterative-improve
-    (lambda (guess) (close-enough? guess (f guess)))
-    (lambda (guess) (f guess)))
-  first-guess))
+(numer x)
+(denom x)
+(print-rat x)
