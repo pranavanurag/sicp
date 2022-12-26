@@ -59,9 +59,18 @@
     (average (x-point (start-segment s)) (x-point (end-segment s)))
     (average (y-point (start-segment s)) (y-point (end-segment s)))))
 (define (length-segment s)
-  (sqrt (+ (square (- (x-point))))))
+  (distance (start-segment s) (end-segment s)))
 
-(define mys (make-segment (make-point 12 13) (make-point 13 15)))
-(print-point (midpoint-segment mys))
+(define (make-rectangle height breadth)
+  (cons height breadth))
+(define (height-rectangle r) (car r))
+(define (breadth-rectangle r) (cdr r))
+(define (area-rectangle r)
+  (* (height-rectangle r) (breadth-rectangle r)))
+(define (perimeter-rectangle r)
+  (* 2 (+ (height-rectangle r) (breadth-rectangle r))))
 
-((make-rectangle height breadth))
+(define rectangle1 (make-rectangle 12 13))
+
+(area-rectangle rectangle1)
+(perimeter-rectangle rectangle1)
