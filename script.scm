@@ -9,6 +9,19 @@
   (display (y-point p))
   (display ")"))
 
+(define (make-segment p1 p2) (cons p1 p2))
+(define (start-segment s) (car s))
+(define (end-segment s) (cdr s))
+(define (print-segment s)
+  (newline)
+  (display "<")
+  (print-point (start-segment s))
+  (display ",")
+  (print-point (end-segment s))
+  (display ">"))
 
 (define myp (make-point 12 13))
 (print-point myp)
+
+(define mys (make-segment (make-point 12 13) (make-point 13 15)))
+(print-segment mys)
