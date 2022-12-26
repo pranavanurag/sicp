@@ -1,3 +1,6 @@
+(define (average x y)
+  (/ (+ x y) 2.0))
+
 (define (make-point x y) (cons x y))
 (define (x-point p) (car p))
 (define (y-point p) (cdr p))
@@ -19,19 +22,10 @@
   (display ",")
   (print-point (end-segment s))
   (display ">"))
-
-(define myp (make-point 12 13))
-(print-point myp)
-
-(define mys (make-segment (make-point 12 13) (make-point 13 15)))
-(print-segment mys)
-
-(define (average x y)
-  (/ (+ x y) 2.0))
-
 (define (midpoint-segment s)
   (make-point
     (average (x-point (start-segment s)) (x-point (end-segment s)))
     (average (y-point (start-segment s)) (y-point (end-segment s)))))
 
+(define mys (make-segment (make-point 12 13) (make-point 13 15)))
 (print-point (midpoint-segment mys))
