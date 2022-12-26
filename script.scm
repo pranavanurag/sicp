@@ -7,7 +7,6 @@
   (let ((fsign (* (sign n) (sign d))))
     (set! n (* fsign (abs n)))
     (set! d (abs d))
-    (newline) (display "updated values of n and d ") (display n) (display ", ") (display d) (display ", fsign = ") (display fsign)
     (make-rat-sub n d)))
 
     
