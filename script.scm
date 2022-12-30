@@ -70,7 +70,21 @@
 (define (perimeter-rectangle r)
   (* 2 (+ (height-rectangle r) (breadth-rectangle r))))
 
-(define rectangle1 (make-rectangle 12 13))
+
+;; alternative representation
+;; given 4 points, make-rectangle-points will call make-rectangle with calculated height and breadth
+;; assumes <p1, p2> and <p3 and p4> create distinct sides of the rectangle
+;; works as long as the 'rectangle' data object is only used to find perimeter and area
+(define (make-rectangle-points p1 p2 p3 p4)
+  (let ((l1 (distance p1 p2)) (l2 (distance p3 p4)))
+  (make-rectangle l1 l2)))
+
+(define rectangle1
+  (make-rectangle-points
+    (make-point 0 0)
+    (make-point 1 0)
+    (make-point 1 1)
+    (make-point 0 1)))
 
 (area-rectangle rectangle1)
 (perimeter-rectangle rectangle1)
