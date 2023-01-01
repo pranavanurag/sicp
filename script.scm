@@ -1,12 +1,22 @@
+(define (divisibility a b)
+  (define (iter x)
+    (if (or (> (remainder x b) 0) (= x 0))
+      0
+      (+ 1 (iter (/ x b)))))
+  (iter a))
+
+(divisibility 108 3)
+
 (define (cons x y)
-  (lambda (m) (m x y)))
+  (* (expt 2 x) (expt 3 y)))
 
-(define (car z)
-  (z (lambda (p q) p)))
+(define (car p)
+  (divisibility p 2))
 
-(define (cdr z)
-  (z (lambda (p q) q)))
+(define (cdr p)
+  (divisibility p 3))
 
-(define x (cons 3 5))
-(car x)
-(cdr x)
+
+(define mypair (cons 14 45))
+(car mypair)
+(cdr mypair)
