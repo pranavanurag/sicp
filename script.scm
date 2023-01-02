@@ -1,22 +1,15 @@
-(define (divisibility a b)
-  (define (iter x)
-    (if (or (> (remainder x b) 0) (= x 0))
-      0
-      (+ 1 (iter (/ x b)))))
-  (iter a))
+(define zero (lambda (f) (lambda (x) x)))
+(define (add-1 n)
+  (lambda (f) (lambda (x) (f ((n f) x)))))
 
-(divisibility 108 3)
+(define one (lambda (f) (lambda (x) (f x))))
+(define two (lambda (f) (lambda (x) (f (f x)))))
 
-(define (cons x y)
-  (* (expt 2 x) (expt 3 y)))
+(define (add-numbers a)
+  (lambda (b)
+    (lambda (f)
+      (lambda (x)
+       ((a f) ((b f) x))))))
 
-(define (car p)
-  (divisibility p 2))
-
-(define (cdr p)
-  (divisibility p 3))
-
-
-(define mypair (cons 14 45))
-(car mypair)
-(cdr mypair)
+;((((add-numbers one) one) add-1) 0)
+((((add-numbers one) one) add-1) 0)
