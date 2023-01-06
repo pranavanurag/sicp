@@ -11,5 +11,7 @@
       (lambda (x)
        ((a f) ((b f) x))))))
 
-;((((add-numbers one) one) add-1) 0)
-((((add-numbers one) one) add-1) 0)
+((zero add-1) 0)
+((((one add-1) zero) add-1) 0)
+((two add-1) 0)
+(((one add-1) zero) 0)
