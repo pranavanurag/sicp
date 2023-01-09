@@ -1,17 +1,14 @@
-(define zero (lambda (f) (lambda (x) x)))
-(define (add-1 n)
-  (lambda (f) (lambda (x) (f ((n f) x)))))
+(define (make-interval a b) (cons a b))
+(define (lower-bound x) (car x))
+(define (upper-bound x) (cdr x))
 
-(define one (lambda (f) (lambda (x) (f x))))
-(define two (lambda (f) (lambda (x) (f (f x)))))
+(define (sub-interval x y)
+  (make-interval
+    (- (lower-bound x) (upper-bound y))
+    (- (upper-bound x) (lower-bound y))))
 
-(define (add-numbers a)
-  (lambda (b)
-    (lambda (f)
-      (lambda (x)
-       ((a f) ((b f) x))))))
+(define i1 (make-interval 1.3 1.4))
+(define i2 (make-interval 1.5 2.4))
 
-((zero add-1) 0)
-((((one add-1) zero) add-1) 0)
-((two add-1) 0)
-(((one add-1) zero) 0)
+(lower-bound (sub-interval i1 i2))
+(upper-bound (sub-interval i1 i2))
