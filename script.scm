@@ -9,10 +9,14 @@
     (- (upper-bound x) (lower-bound y))))
 
 
-(define (div-interval x y) (mul-interval
-   x
-   (make-interval (/ 1.0 (upper-bound y))
-                  (/ 1.0 (lower-bound y)))))
+(define (div-interval x y)
+  (if (= (width y) 0)
+    (error "width of interval y is 0")
+    (mul-interval
+      x
+      (make-interval
+        (/ 1.0 (upper-bound y))
+        (/ 1.0 (lower-bound y))))))
 
 
 (define (mul-interval x y)
@@ -24,8 +28,6 @@
                    (max p1 p2 p3 p4))))
 
 (define i1 (make-interval 1.6 2.4))
-(define i2 (make-interval 1.4 2.4))
+(define i2 (make-interval 1.4 1.4))
 
-(width i1)
-(width i2)
-(width (mul-interval i1 i2))
+(div-interval i1 i2)
