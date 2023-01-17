@@ -28,21 +28,21 @@
       (u1 (upper-bound x))
       (l2 (lower-bound y))
       (u2 (upper-bound y)))
-    (if (> l1 0)  ; l1 > 0 implies u1 > 0
-      (if (> l2 0)   ; l2 > 0 implies u2 > 0
+    (if (> l1 0)
+      (if (> l2 0)
         (make-interval (* l1 l2) (* u1 u2)) ; l1 > 0, l2 > 0, u1 > 0, u2 > 0
-        (if (> u2 0)  ; and l2 < 0 (else-clause)
+        (if (> u2 0)
           (make-interval (* u1 l2) (* u1 u2))  ; l1 > 0, u1 > 0, l2 < 0, u2 > 0
           (make-interval (* u1 l2) (* l1 u2)))) ; l1 > 0, u1 > 0, l2 < 0, u2 < 0
-      (if (> l2 0) ; l2 > 0 implies u2 > 0, l1 < 0 (else-clause of the outer most if)
+      (if (> l2 0)
         (if (> u1 0)
           (make-interval (* l1 u2) (* u1 u2))  ; l1 < 0, u1 > 0, l2 > 0, u2 > 0
           (make-interval (* l1 u2) (* u1 l2))) ; l1 < 0, u1 < 0, l2 > 0, u2 > 0
-        (if (> u1 0)  ; and l2 < 0, l1 < 0 (else-clauses)
+        (if (> u1 0)
           (if (> u2 0)
             (make-interval (min (* u1 l2) (* l1 u2)) (max (* l1 l2) (* u1 u2)))  ; l1 < 0, u1 > 0, l2 < 0, u2 > 0
             (make-interval (* u1 l2) (* l1 l2))) ; l1 < 0, u1 > 0, l2 < 0, u2 < 0
-          (if (> u2 0) ; u1 < 0 (else-clause), l1 < 0, l2 < 0
+          (if (> u2 0)
             (make-interval (* l1 u2) (* l1 l2))  ; l1 < 0, u1 < 0, l2 < 0, u2 > 0
             (make-interval (* u1 u2) (* l1 l2)))))))); l1 < 0, u1 < 0, l2 < 0, u2 < 0
 
