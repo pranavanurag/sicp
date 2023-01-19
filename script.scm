@@ -3,6 +3,13 @@
     (error "bro lmao")
     (cons a b)))
 
+(define (make-center-percent c p)
+  (define (percent-as-decimal x)
+    (* 0.01 x))
+  (make-interval
+    (- c (* c (percent-as-decimal p)))
+    (+ c (* c (percent-as-decimal p)))))
+
 (define (lower-bound x) (car x))
 (define (upper-bound x) (cdr x))
 (define (width x) (/ (- (upper-bound x) (lower-bound x)) 2))
@@ -46,22 +53,6 @@
             (make-interval (* l1 u2) (* l1 l2))  ; l1 < 0, u1 < 0, l2 < 0, u2 > 0
             (make-interval (* u1 u2) (* l1 l2)))))))); l1 < 0, u1 < 0, l2 < 0, u2 < 0
 
-(define i1 (mul-interval (make-interval 2 2.5) (make-interval 3 3.5)))
-(define i2 (mul-interval (make-interval 2 2.5) (make-interval -3 3.5)))
-(define i3 (mul-interval (make-interval 2 2.5) (make-interval -3.5 -3)))
-(define i4 (mul-interval (make-interval -2 2.5) (make-interval 3 3.5)))
-(define i5 (mul-interval (make-interval -2 2.5) (make-interval -3 3.5)))
-(define i6 (mul-interval (make-interval -2 2.5) (make-interval -3.5 -3)))
-(define i7 (mul-interval (make-interval -2.5 -2) (make-interval 3 3.5)))
-(define i8 (mul-interval (make-interval -2.5 -2) (make-interval -3 3.5)))
-(define i9 (mul-interval (make-interval -2.5 -2) (make-interval -3.5 -3)))
-
-(newline) (display (lower-bound i1)) (display ",") (display (upper-bound i1))
-(newline) (display (lower-bound i2)) (display ",") (display (upper-bound i2))
-(newline) (display (lower-bound i3)) (display ",") (display (upper-bound i3))
-(newline) (display (lower-bound i4)) (display ",") (display (upper-bound i4))
-(newline) (display (lower-bound i5)) (display ",") (display (upper-bound i5))
-(newline) (display (lower-bound i6)) (display ",") (display (upper-bound i6))
-(newline) (display (lower-bound i7)) (display ",") (display (upper-bound i7))
-(newline) (display (lower-bound i8)) (display ",") (display (upper-bound i8))
-(newline) (display (lower-bound i9)) (display ",") (display (upper-bound i9))
+(define i1 (make-center-percent 12 2))
+(lower-bound i1)
+(upper-bound i1)
