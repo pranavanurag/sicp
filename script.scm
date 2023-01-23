@@ -13,7 +13,9 @@
 (define (make-center-percent c p)
   (define (percent-as-decimal x)
     (* 0.01 x))
-  (make-center-width c (* 0.01 p)))
+  (make-center-width c (* (* 0.01 p) c)))
+(define (percent i)
+  (* 100 (/ (width i) (center i))))
 
 (define (lower-bound x) (car x))
 (define (upper-bound x) (cdr x))
@@ -58,6 +60,8 @@
             (make-interval (* l1 u2) (* l1 l2))  ; l1 < 0, u1 < 0, l2 < 0, u2 > 0
             (make-interval (* u1 u2) (* l1 l2)))))))); l1 < 0, u1 < 0, l2 < 0, u2 < 0
 
-(define i1 (make-center-percent 12 2))
+(define i1 (make-center-percent 10 2))
 (lower-bound i1)
 (upper-bound i1)
+
+(percent i1)
