@@ -44,7 +44,7 @@
       (p1 (percent x))
       (c2 (center y))
       (p2 (percent y)))
-    (make-center-percent
+    (make-center-width
       (* c1 c2)
       (+ (* c1 (* c2 (* 0.01 p2))) (* c2 (* c1 (* 0.01 p1)))))))
 
@@ -72,8 +72,8 @@
             (make-interval (* l1 u2) (* l1 l2))  ; l1 < 0, u1 < 0, l2 < 0, u2 > 0
             (make-interval (* u1 u2) (* l1 l2)))))))); l1 < 0, u1 < 0, l2 < 0, u2 < 0
 
-(define i1 (make-center-percent 12 0.001))
-(define i2 (make-center-percent 15 0.005))
+(define i1 (make-center-percent 12 0.1))
+(define i2 (make-center-percent 15 0.5))
 
 (define mul1 (mul-interval i1 i2))
 (define mul2 (mul-interval-center-percent i1 i2))
