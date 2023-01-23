@@ -38,6 +38,16 @@
         (/ 1.0 (upper-bound y))
         (/ 1.0 (lower-bound y))))))
 
+(define (mul-interval-center-percent x y)
+  (let
+    ((c1 (center x))
+      (p1 (percent x))
+      (c2 (center y))
+      (p2 (percent y)))
+    (make-center-percent
+      (* c1 c2)
+      (+ (* c1 (* c2 (* 0.01 p2))) (* c2 (* c1 (* 0.01 p1)))))))
+
 (define (mul-interval x y)
   (let
     ((l1 (lower-bound x))
@@ -62,8 +72,14 @@
             (make-interval (* l1 u2) (* l1 l2))  ; l1 < 0, u1 < 0, l2 < 0, u2 > 0
             (make-interval (* u1 u2) (* l1 l2)))))))); l1 < 0, u1 < 0, l2 < 0, u2 < 0
 
-(define i1 (make-center-percent 14 1.5))
-(lower-bound i1)
-(upper-bound i1)
+(define i1 (make-center-percent 12 0.001))
+(define i2 (make-center-percent 15 0.005))
 
-(percent i1)
+(define mul1 (mul-interval i1 i2))
+(define mul2 (mul-interval-center-percent i1 i2))
+
+(lower-bound mul1)
+(upper-bound mul1)
+
+(lower-bound mul2)
+(upper-bound mul2)
