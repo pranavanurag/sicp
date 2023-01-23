@@ -60,7 +60,7 @@
             (make-interval (* l1 u2) (* l1 l2))  ; l1 < 0, u1 < 0, l2 < 0, u2 > 0
             (make-interval (* u1 u2) (* l1 l2)))))))); l1 < 0, u1 < 0, l2 < 0, u2 < 0
 
-(define i1 (make-center-percent 10 2))
+(define i1 (make-center-percent 14 1.5))
 (lower-bound i1)
 (upper-bound i1)
 
