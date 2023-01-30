@@ -39,12 +39,9 @@
         (/ 1.0 (lower-bound y))))))
 
 (define (mul-interval-center-percent x y)
-  (let
-    ((c1 (center x))
-      (p1 (percent x))
-      (c2 (center y))
-      (p2 (percent y)))
-    (make-center-percent (* c1 c2) (/ (+ p1 p2) (+ 1 (* p1 p2))))))
+  (make-center-percent
+    (* (center x) (center y))
+    (+ (percent x) (percent y))))
 
 (define (mul-interval x y)
   (let
