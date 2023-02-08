@@ -3,7 +3,6 @@
 (define one-through-four (list 1 2 3 4))
 (define (last-pair some-list)
   (define (last-pair-iter a)
-    ;(newline) (display a) (display " ") (display (car a)) (display " ") (display (cdr a))
     (if (null? (cdr a))
       a
       (last-pair-iter (cdr a))))
