@@ -9,4 +9,11 @@
   (last-pair-iter some-list))
 
 
-(last-pair (list 23 72 149 34))
+(define (reverse some-list)
+  (define (reverse-iter remaining ans)
+    (if (null? remaining)
+      ans
+      (reverse-iter (cdr remaining) (cons (car remaining) ans))))
+  (reverse-iter some-list '()))
+
+(reverse (list 23 72 149 34))
