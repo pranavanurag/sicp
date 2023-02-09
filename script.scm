@@ -1,19 +1,15 @@
-(cons 1 (cons 2 (cons 3 (cons 4 '()))))
+(define (no-more? list-of-denominations) (null? list-of-denominations))
+(define (except-first-denomination list-of-denominations) (cdr list-of-denominations))
+(define (first-denomination list-of-denominations) (car list-of-denominations))
 
-(define one-through-four (list 1 2 3 4))
-(define (last-pair some-list)
-  (define (last-pair-iter a)
-    (if (null? (cdr a))
-      a
-      (last-pair-iter (cdr a))))
-  (last-pair-iter some-list))
+(define (cc amount coin-values)
+  (cond ((= amount 0) 1)
+  ((or (< amount 0) (no-more? coin-values)) 0)
+  (else (+
+    (cc amount (except-first-denomination coin-values))
+    (cc (- amount (first-denomination coin-values)) coin-values)))))
 
+(define us-coins (list 50 25 10 5 1))
+(define uk-coins (list 100 50 20 10 5 2 1 0.5))
 
-(define (reverse some-list)
-  (define (reverse-iter remaining ans)
-    (if (null? remaining)
-      ans
-      (reverse-iter (cdr remaining) (cons (car remaining) ans))))
-  (reverse-iter some-list '()))
-
-(reverse (list 23 72 149 34))
+(cc 100 us-coins)
