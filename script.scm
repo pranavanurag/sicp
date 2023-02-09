@@ -1,15 +1,24 @@
-(define (no-more? list-of-denominations) (null? list-of-denominations))
-(define (except-first-denomination list-of-denominations) (cdr list-of-denominations))
-(define (first-denomination list-of-denominations) (car list-of-denominations))
+(define (reverse some-list)
+  (define (reverse-iter remaining ans)
+    (if (null? remaining)
+      ans
+      (reverse-iter (cdr remaining) (cons (car remaining) ans))))
+  (reverse-iter some-list '()))
 
-(define (cc amount coin-values)
-  (cond ((= amount 0) 1)
-  ((or (< amount 0) (no-more? coin-values)) 0)
-  (else (+
-    (cc amount (except-first-denomination coin-values))
-    (cc (- amount (first-denomination coin-values)) coin-values)))))
+  
+(define (first some-list)
+  (car some-list))
 
-(define us-coins (list 50 25 10 5 1))
-(define uk-coins (list 100 50 20 10 5 2 1 0.5))
+(define (mod2 a) (remainder a 2))
 
-(cc 100 us-coins)
+(define (same-parity . x)
+  (define (collect-parity-iter p curr ans)
+    (if (null? curr)
+      (reverse ans)
+      (if (= p (mod2 (car curr)))
+        (collect-parity-iter p (cdr curr) (cons (car curr) ans))
+        (collect-parity-iter p (cdr curr) ans))))
+  (let ((parity (mod2 (first x))))
+    (collect-parity-iter parity x '())))
+
+(same-parity 2 4 5 6 7 8 9 10 11 12 13)
