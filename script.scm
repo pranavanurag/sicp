@@ -1,12 +1,10 @@
-(define (square-list items)
-  (define (iter things answer)
-    (if (null? things)
-        answer
-        (iter
-          (cdr things)
-          (cons
-            answer`
-            (square (car things))))))
-  (iter items '()))
+(define (for-each f items)
+  ;(newline) (display "for-each invoked: ") (display items)
+  (if (null? items)
+    #t
+    ((for-each f (cdr items)) (f (car items)))))
 
-(square-list (list 1 2 34 4 5 5))
+
+(for-each
+  (lambda (x) (newline) (display x))
+  (list 57 321 88))
