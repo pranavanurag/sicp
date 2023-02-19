@@ -9,7 +9,6 @@
 
 (define (total-weight mobile)
   (define (total-weight-iter submobile)
-  ;(newline) (display "total-weight-iter called with: ") (display submobile)
     (cond
       ((null? submobile) 0)
       ((not (pair? submobile)) submobile)
