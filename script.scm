@@ -18,9 +18,17 @@
         (total-weight-iter (branch-structure (right-branch submobile)))))))
   (total-weight-iter mobile))
 
+(define (balanced-mobile? mobile)
+  (define (torque branch)
+    (* (branch-length branch) (total-weight (branch-structure branch))))
+  (and
+    (= (torque (left-branch mobile)) (torque (right-branch mobile)))
+    (balanced-mobile (branch-structure (left-branch mobile)))
+    (balanced-mobile (branch-structure (right-branch mobile)))))
+
 (define x
   (make-mobile
-    (make-branch 1 (make-mobile (make-branch 2 4) (make-branch 1 1)))
+    (make-branch 1 (make-mobile (make-branch 2 6) (make-branch 1 1)))
     (make-branch 2 3)))
 
-(total-weight x)
+(balanced-mobile? x)
