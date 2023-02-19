@@ -1,16 +1,11 @@
-(define x (list (list 1 2) (list 3 4))) x
-
-(define (reverse some-list)
-  ;(newline) (display "reverse invoked with ") (display some-list)
-  (define (reverse-iter remaining ans)
+(define (fringe tree)
+  (define (fringe-iter subtree)
     (cond
-      ((null? remaining) ans)
-      ((not (pair? remaining)) remaining)
-      (else (reverse-iter
-        (cdr remaining)
-        (cons (reverse (car remaining)) ans)))))
-  (reverse-iter some-list '()))
+      ((null? subtree) '())
+      ((not (pair? subtree)) (list subtree))
+      (else (append (fringe (car tree)) (fringe (cdr tree))))))
+  (fringe-iter tree))
 
-(reverse x)
-
-(reverse (list (list 3 4) (list 3 4 5 6 1 3)))
+(define x (list (list 1 2) (list 3 4)))
+(fringe x)
+(fringe (list x (list 10 11 (list 12 13)) x))
