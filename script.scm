@@ -29,11 +29,8 @@
       (balanced-mobile? (branch-structure (left-branch mobile)))
       (balanced-mobile? (branch-structure (right-branch mobile)))))))
 
+(define x (make-mobile
+  (make-branch 2 3)
+  (make-branch 1 (make-mobile (make-branch 1 3) (make-branch 1 3)))))
 
-
-(define y
-  (make-mobile
-    (make-branch 5 6)
-    (make-branch 6 5)))
-
-(balanced-mobile? y)
+(balanced-mobile? x)
