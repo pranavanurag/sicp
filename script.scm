@@ -18,16 +18,22 @@
   (total-weight-iter mobile))
 
 (define (balanced-mobile? mobile)
+  (newline) (display "balanced-mobile called with: ") (display mobile)
   (define (torque branch)
     (* (branch-length branch) (total-weight (branch-structure branch))))
-  (and
-    (= (torque (left-branch mobile)) (torque (right-branch mobile)))
-    (balanced-mobile (branch-structure (left-branch mobile)))
-    (balanced-mobile (branch-structure (right-branch mobile)))))
+  (cond
+    ((null? mobile) #t)
+    ((not (pair? mobile)) #t)
+    (else (and
+      (= (torque (left-branch mobile)) (torque (right-branch mobile)))
+      (balanced-mobile? (branch-structure (left-branch mobile)))
+      (balanced-mobile? (branch-structure (right-branch mobile)))))))
 
-(define x
+
+
+(define y
   (make-mobile
-    (make-branch 1 (make-mobile (make-branch 2 6) (make-branch 1 1)))
-    (make-branch 2 3)))
+    (make-branch 5 6)
+    (make-branch 6 5)))
 
-(balanced-mobile? x)
+(balanced-mobile? y)
