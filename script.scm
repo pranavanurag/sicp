@@ -18,34 +18,11 @@
         (cdr rest))))
   (iter initial sequence))
 
-(fold-left + 0 (list 1 2 3 4))
-(fold-right + 0 (list 1 2 3 4))
+(define (reverse-r sequence)
+  (fold-right (lambda (current-element rest-result) (append rest-result (list current-element))) '() sequence))
 
-(fold-right / 1 (list 1 2 3))
-(fold-left / 1 (list 1 2 3))
+(define (reverse-l sequence)
+  (fold-left (lambda (current-element rest-result) (cons rest-result current-element)) '() sequence))
 
-(fold-right list '() (list 1 2 3))
-(fold-left list '() (list 1 2 3))
-
-(fold-right cons '() (list 1 2 3))
-(fold-left cons '() (list 1 2 3))
-
-(fold-right * 1 (list 1 2 3))
-(fold-left * 1 (list 1 2 3))
-
-
-
-(fold-right + 1 (list 1 2 3))
-(fold-left + 1 (list 1 2 3))
-
-
-(fold-right - 1 (list 1 2 3))
-(fold-left - 1 (list 1 2 3))
-
-
-(fold-right append '() (list (list 1 2 3) (list 4 5 6)))
-(fold-left append '() (list (list 1 2 3) (list 4 5 6)))
-
-
-(fold-right (lambda (x y) (+ 1 (* x y))) 1 (list 1 2 3))
-(fold-left (lambda (x y) (+ 1 (* x y))) 1 (list 1 2 3))
+(reverse-r (list 1 2 3 4))
+(reverse-l (list 1 2 3 4))
