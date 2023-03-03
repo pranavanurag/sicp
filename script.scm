@@ -55,11 +55,19 @@
 
 (define (flatmap proc seq) (accumulate append '() (map proc seq)))
 
-(define (prime-sum? pair) (prime? (+ (car pair) (cadr pair))))
-
 (define (make-pair-sum pair) (list (car pair) (cadr pair) (+ (car pair) (cadr pair))))
 
-(define (prime-sum-pairs n)
-  (map make-pair-sum (filter prime-sum? (unique-pairs n))))
+(define (sum-to? s) (lambda (triplet) (= s (+ (car triplet) (cadr triplet) (caddr triplet)))))
 
-(prime-sum-pairs 100)
+(define (unique-triplets n)
+  (flatmap
+    (lambda (i)
+      (map
+        (lambda (pair) (append (list i) pair))
+        (unique-pairs (- i 1))))
+    (enumerate-interval 1 n)))
+
+(define (find-sum-triplets sum n)
+  (filter (sum-to? sum) (unique-triplets n)))
+
+(find-sum-triplets 10 8)
