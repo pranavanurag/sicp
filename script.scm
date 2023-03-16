@@ -1,16 +1,36 @@
-(define (make-frame-1 origin edge1 edge2) (list origin edge1 edge2))
-(define (make-frame-2 origin edge1 edge2) (cons origin (cons edge1 edge2)))
+(define make-vect cons)
+(define xcor-vect car)
+(define ycor-vect cdr)
+
+(define (add-vect v1 v2)
+  (make-vect
+    (+ (xcor-vect v1) (xcor-vect v2))
+    (+ (ycor-vect v1) (ycor-vect v2))))
+
+(define (sub-vect v1 v2)
+  (make-vect
+    (- (xcor-vect v1) (xcor-vect v2))
+    (- (ycor-vect v1) (ycor-vect v2))))
+
+(define (scale-vect s v)
+  (make-vect
+    (* s (xcor-vect v))
+    (* s (ycor-vect v))))
 
 
-(define (origin-frame-1 frame) (first frame))
-(define (edge1-frame-1 frame) (second frame))
-(define (edge2-frame-1 frame) (third frame))
+(define (make-frame origin edge1 edge2) (list origin edge1 edge2))
+(define (origin-frame frame) (first frame))
+(define (edge1-frame frame) (second frame))
+(define (edge2-frame frame) (third frame))
 
 
-(define (origin-frame-2 frame) (car frame))
-(define (edge1-frame-2 frame) (cadr frame))
-(define (edge2-frame-2 frame) (cddr frame))
-
+(define (frame-coord-map frame)
+  (lambda (v)
+    (add-vect
+      (origin-frame frame)
+      (add-vect 
+        (scale-vector (xcord-vect v) (edge1-frame frame))
+        (scale-vector (ycord-vect v) (edge2-frame frame))))))
 
 ;painter is a procedure that takes a frame as an input 
 ;and draws a particular image shifted and scaled to that frame
@@ -46,3 +66,29 @@
 (define start-segment car)
 (define end-segment cdr)
 
+
+;beautiful - frame is not required for this procedure as an argument
+;this procedure simply returns a procedure which takes a frame as input
+;and draws its corners. the "corners" can be expressed as the corners of the unit sq
+(define (outline->painter)
+  (segments->painter
+    (list 
+      (make-segment (make-vect 0 0) (make-vect 0 1))
+      (make-segment (make-vect 0 0) (make-vect 1 0))
+      (make-segment (make-vect 1 0) (make-vect 1 1))
+      (make-segment (make-vect 0 1) (make-vect 1 1)))))
+
+
+(define (X->painter)
+  (segments->painter
+    (list
+      (make-segment (make-vect 0 0) (make-vect 1 1))
+      (make-segment (make-vect 0 1) (make-vect 1 0)))))
+
+(define (diamond->painter)
+  (segments->painter
+    (list
+      (make-segment (make-vect 0.5 0) (make-vect 1 0.5))
+      (make-segment (make-vect 1 0.5) (make-vect 0.5 1))
+      (make-segment (make-vect 0.5 1) (make-vect 0 0.5))
+      (make-segment (make-vect 0 0.5) (make-vect 0.5 0)))))
