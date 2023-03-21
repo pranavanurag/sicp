@@ -91,3 +91,32 @@
           new-origin
           (sub-vect (m corner1) new-origin)
           (sub-vect (m corner2) new-origin)))))))
+
+(define (flip-vert painter)
+  (transform-painter
+    painter
+    (make-vect 0 1)
+    (make-vect 1 1)
+    (make-vect 0 0)))
+
+(define (flip-horiz painter)
+  (transform-painter
+    painter
+    (make-vect 1 0)
+    (make-vect 0 0)
+    (make-vect 1 1)))
+
+(define (rotate-180-cc painter)
+  (transform-painter
+    painter
+    (make-vect 1 1)
+    (make-vect 0 1)
+    (make-vect 1 0)))
+
+(define (rotate-270-cc painter)
+  (transform-painter
+    painter
+    (make-vect 0 1)
+    (make-vect 0 0)
+    (make-vect 1 1)))
+    
