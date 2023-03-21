@@ -79,71 +79,15 @@
       (make-segment (make-vect 0 1) (make-vect 1 1)))))
 
 
-(define (X->painter)
-  (segments->painter
-    (list
-      (make-segment (make-vect 0 0) (make-vect 1 1))
-      (make-segment (make-vect 0 1) (make-vect 1 0)))))
 
-(define (diamond->painter)
-  (segments->painter
-    (list
-      (make-segment (make-vect 0.5 0) (make-vect 1 0.5))
-      (make-segment (make-vect 1 0.5) (make-vect 0.5 1))
-      (make-segment (make-vect 0.5 1) (make-vect 0 0.5))
-      (make-segment (make-vect 0 0.5) (make-vect 0.5 0)))))
-
-
-(define (diamond->painter)
-  (segments->painter
-    (list
-      (segment (vect 0.5 0) (vect 1 0.5))
-      (segment (vect 1 0.5) (vect 0.5 1))
-      (segment (vect 0.5 1) (vect 0 0.5))
-      (segment (vect 0 0.5) (vect 0.5 0)))))
-
-
-(define (wave->painter)
-  (segments->painter
-    (let
-      ((a (vect 0.2 0))
-        (b (vect 0.4 0.6))
-        (c (vect 0.3 0.5))
-        (d (vect 0 0.7))
-        (e (vect 0 0.8))
-        (f (vect 0.3 0.6))
-        (g (vect 0.4 0.7))
-        (h (vect 0.3 0.85))
-        (i (vect 0.4 1))
-        (j (vect 0.6 1))
-        (k (vect 0.7 0.85))
-        (l (vect 0.6 0.7))
-        (m (vect 0.8 0.8))
-        (n (vect 1 0.6))
-        (o (vect 1 0.5))
-        (missed (vect 0.8 0.7))
-        (p (vect 0.6 0.6))
-        (q (vect 0.8 0))
-        (r (vect 0.7 0))
-        (s (vect 0.5 0.4))
-        (t (vect 0.3 0)))
-      (list
-        (segment a b)
-        (segment b c)
-        (segment c d)
-        (segment e f)
-        (segment f g)
-        (segment g h)
-        (segment h i)
-        (segment j k)
-        (segment k l)
-        (segment l m)
-        (segment m n)
-        (segment o missed)
-        (segment missed p)
-        (segment p q)
-        (segment r s)
-        (segment s t)))))
-
-
-
+;transform-painter takes a painter and the description of a new frame
+;(origin, corner1, corner2 -> question - why not use the frame abstraction?)
+;and returns a painter 
+(define (transform-painter painter origin corner1 corner2)
+  (lambda (frame)
+    (let ((m (frame-coord-map frame)))
+      (let ((new-origin (m origin)))
+        (painter (make-frame
+          new-origin
+          (sub-vect (m corner1) new-origin)
+          (sub-vect (m corner2) new-origin)))))))
