@@ -30,6 +30,20 @@
 
 (define (multiplicand p) (caddr p))
 
+(define (make-exponentiation base exponent)
+  (cond
+    ((= exponent 0) 1)
+    ((= exponent 1) base)
+    ((= base 0) 0);unless exponent = 0
+    (else (list '** base exponent))))
+
+(define (exponentiation? expression)
+  (and (pair? expression) (eq? '** (car expression))))
+
+(define (base e) (cadr e))
+
+(define (exponent e) (caddr e))
+
 (define (deriv exp var)
   (cond
     ((number? exp) 0)
@@ -51,3 +65,6 @@
 (deriv '(* (* x y) (+ x 3)) 'x)
 
 
+(define expr (make-exponentiation 12 13))
+(exponentiation? expr)
+(sum? expr)
