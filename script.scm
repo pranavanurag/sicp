@@ -37,8 +37,12 @@
     ((and (number? base )(= base 0)) 0);unless exponent = 0
     (else (list '** base exponent))))
 
-(define (exponentiation? expression)
-  (and (pair? expression) (eq? '** (car expression)) (number? (exponent expression))))
+;return true if expression = f(x)^(constant wrt x) only
+(define (exponentiation? expression var)
+  (and
+    (pair? expression)
+    (eq? '** (car expression))
+    (or (number? (exponent expression)) (not (memq var (exponent expression))))))
 
 (define (base e) (cadr e))
 
@@ -57,7 +61,7 @@
       (make-sum
         (make-product (multiplier exp) (deriv (multiplicand exp) var))
         (make-product (deriv (multiplier exp) var) (multiplicand exp))))
-    ((exponentiation? exp)
+    ((exponentiation? exp var)
       (make-product
         (exponent exp)
         (make-product
@@ -66,13 +70,13 @@
     (else (error "unknown expression type: DERIV" exp))))
 
 
-(deriv '(+ x 3) 'x)
-
-(deriv '(* (* x y) (+ x 3)) 'x)
-
-
-(define expr (make-exponentiation 'x 13))
-(exponentiation? expr)
-(sum? expr)
-
+(define expr (make-exponentiation 'x 'x))
+(define expr2 (make-exponentiation 'x 'y))
 (deriv expr 'x)
+(deriv expr2 'x)
+
+(exponentiation? expr 'x)
+
+
+(memq 'x (exponent (list '** 'x 'y)))
+(memq 'x (list '** 'x 'x))
