@@ -37,12 +37,12 @@
     ((and (number? base )(= base 0)) 0);unless exponent = 0
     (else (list '** base exponent))))
 
-;return true if expression = f(x)^(constant wrt x) only
+;return true if expression = f(x)^number only
 (define (exponentiation? expression var)
   (and
     (pair? expression)
     (eq? '** (car expression))
-    (or (number? (exponent expression)) (not (memq var (exponent expression))))))
+    (number? (exponent expression))))
 
 (define (base e) (cadr e))
 
@@ -70,7 +70,7 @@
     (else (error "unknown expression type: DERIV" exp))))
 
 
-(define expr (make-exponentiation 'x 'x))
+(define expr (make-exponentiation 'x 13))
 (define expr2 (make-exponentiation 'x 'y))
 (deriv expr 'x)
 (deriv expr2 'x)
