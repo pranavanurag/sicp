@@ -1,15 +1,27 @@
+(define (accumulate op initial sequence)
+  (if (null? sequence)
+    initial
+    (op
+      (car sequence)
+      (accumulate op initial (cdr sequence)))))
+
 (define (=number? exp num) (and (number? exp) (= exp num)))
 
 (define (variable? x) (symbol? x))
 
 (define (same-variable? v1 v2) (and (variable? v1) (variable? v2) (eq? v1 v2)))
 
-(define (make-sum a1 a2)
-  (cond
-    ((=number? a1 0) a2)
-    ((=number? a2 0) a1)
-    ((and (number? a1) (number? a2)) (+ a1 a2))
-    (else (list '+ a1 a2))))
+(define (make-sum . parts)
+  (let
+    ((num-sum (accumulate + 0 (filter number? parts)))
+      (others (filter (lambda (x) (not (number? x))) parts)))
+    ;(newline) (display "others = ") (display others) (display ", num-sum = ") (display num-sum)
+    (cond
+      ((and (null? others) (= num-sum 0)) 0)
+      ((= 0 num-sum) (cons '+ others))
+      ((null? others) num-sum)
+      (else (newline) (append (cons '+ others) (list num-sum))))))
+  
 
 (define (make-product m1 m2)
   (cond
@@ -22,7 +34,14 @@
 
 (define (addend s) (cadr s))
 
-(define (augend s) (caddr s))
+(define (augend s)
+  (if (pair? s)
+    (if (= (length s) 2)
+      0
+      (if (= (length s) 3)
+        (caddr s)
+        (cons '+ (cddr s))))
+    s))
 
 (define (product? x) (and (pair? x) (eq? (car x) '*)))
 
@@ -49,6 +68,7 @@
 (define (exponent e) (caddr e))
 
 (define (deriv exp var)
+  ;(newline) (display "deriv called with: ") (display exp)
   (cond
     ((number? exp) 0)
     ((variable? exp)
@@ -70,13 +90,7 @@
     (else (error "unknown expression type: DERIV" exp))))
 
 
-(define expr (make-exponentiation 'x 13))
-(define expr2 (make-exponentiation 'x 'y))
+(define expr '(+ 12 5 (* x x)))
 (deriv expr 'x)
-(deriv expr2 'x)
-
-(exponentiation? expr 'x)
-
-
-(memq 'x (exponent (list '** 'x 'y)))
-(memq 'x (list '** 'x 'x))
+(addend (deriv expr 'x))
+(augend (deriv expr 'x))
