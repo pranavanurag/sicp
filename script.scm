@@ -45,8 +45,8 @@
       (others (filter (lambda (x) (not (number? x))) parts)))
     ;(newline) (display "others = ") (display others) (display ", num-product = ") (display num-product)
     (cond
-      ((and (null? others) (= num-product 0)) 0)
-      ((= 0 num-product) (cons '* others))
+      ((= num-product 0) 0)
+      ((= 1 num-product) (cons '* others))
       ((null? others) num-product)
       (else (newline) (append (cons '* others) (list num-product))))))
 
