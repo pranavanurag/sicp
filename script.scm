@@ -11,6 +11,8 @@
 
 (define (same-variable? v1 v2) (and (variable? v1) (variable? v2) (eq? v1 v2)))
 
+
+
 (define (make-sum . parts)
   (let
     ((num-sum (accumulate + 0 (filter number? parts)))
@@ -21,14 +23,6 @@
       ((= 0 num-sum) (cons '+ others))
       ((null? others) num-sum)
       (else (newline) (append (cons '+ others) (list num-sum))))))
-  
-
-(define (make-product m1 m2)
-  (cond
-    ((or (=number? m1 0) (=number? m2 0)) 0)
-    ((=number? m1 1) m2)
-    ((=number? m2 1) m1)
-    ((and (number? m1) (number? m2)) (* m1 m2)) (else (list '* m1 m2))))
 
 (define (sum? x) (and (pair? x) (eq? (car x) '+)))
 
@@ -42,12 +36,34 @@
         (caddr s)
         (cons '+ (cddr s))))
     s))
+  
+
+
+(define (make-product . parts)
+  (let
+    ((num-product (accumulate * 1 (filter number? parts)))
+      (others (filter (lambda (x) (not (number? x))) parts)))
+    ;(newline) (display "others = ") (display others) (display ", num-product = ") (display num-product)
+    (cond
+      ((and (null? others) (= num-product 0)) 0)
+      ((= 0 num-product) (cons '* others))
+      ((null? others) num-product)
+      (else (newline) (append (cons '* others) (list num-product))))))
 
 (define (product? x) (and (pair? x) (eq? (car x) '*)))
 
 (define (multiplier p) (cadr p))
 
-(define (multiplicand p) (caddr p))
+(define (multiplicand p)
+  (if (pair? p)
+    (if (= (length p) 2)
+      1
+      (if (= (length p) 3)
+        (caddr p)
+        (cons '* (cddr p))))
+    p))
+
+
 
 (define (make-exponentiation base exponent)
   (cond
@@ -66,6 +82,8 @@
 (define (base e) (cadr e))
 
 (define (exponent e) (caddr e))
+
+
 
 (define (deriv exp var)
   ;(newline) (display "deriv called with: ") (display exp)
@@ -90,7 +108,5 @@
     (else (error "unknown expression type: DERIV" exp))))
 
 
-(define expr '(+ 12 5 (* x x)))
+(define expr '(* x x x))
 (deriv expr 'x)
-(addend (deriv expr 'x))
-(augend (deriv expr 'x))
