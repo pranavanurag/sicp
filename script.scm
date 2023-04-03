@@ -7,9 +7,7 @@
 
 
 (define (adjoin-set x set)
-  (if (element-of-set? x set)
-    set
-    (cons x set)))
+  (cons x set))
 
 (define (intersection-set set1 set2)
   (cond
@@ -32,3 +30,4 @@
 (intersection-set a b)
 
 (union-set a b)
+(element-of-set? 1 a)
