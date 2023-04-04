@@ -78,3 +78,30 @@ rep3
 (tree->list-2 rep1)
 (tree->list-2 rep2)
 (tree->list-2 rep3)
+
+(define (qoutient dividend divisor)
+  (/ (- dividend (remainder dividend divisor)) divisor))
+
+(define (partial-tree elts n)
+  (if (= n 0)
+    (cons '() elts)
+    (let ((left-size (qoutient (- n 1) 2)))
+      (let ((left-result (partial-tree elts left-size)))
+        (let
+          ((left-tree (car left-result))
+            (non-left-elts (cdr left-result))
+            (right-size (- n (+ left-size 1))))
+          (let
+            ((this-entry (car non-left-elts))
+              (right-result (partial-tree (cdr non-left-elts) right-size)))
+            (let
+              ((right-tree (car right-result))
+                (remaining-elts (cdr right-result)))
+              (cons (make-tree this-entry left-tree right-tree) remaining-elts))))))))
+
+
+(define (list->tree elements)
+  (car (partial-tree elements (length elements))))
+
+
+(list->tree (list 1 2 4 5 6))
