@@ -45,11 +45,36 @@
   (copy-to-list tree '()))
 
 
-(define mytree
+(define rep1
   (make-tree
     7
     (make-tree 3 (make-leaf 1) (make-leaf 5))
     (make-tree 9 '() (make-leaf 11))))
 
-(tree->list-1 mytree2)
-(tree->list-2 mytree2)
+(define rep2
+  (make-tree
+    3
+    (make-leaf 1)
+    (make-tree
+      7
+      (make-leaf 5)
+      (make-tree 9 '() (make-leaf 11)))))
+
+
+(define rep3
+  (make-tree
+    5
+    (make-tree 3 (make-leaf 1) '())
+    (make-tree 9 (make-leaf 7) (make-leaf 11))))
+
+rep1
+rep2
+rep3
+
+(tree->list-1 rep1)
+(tree->list-1 rep2)
+(tree->list-1 rep3)
+
+(tree->list-2 rep1)
+(tree->list-2 rep2)
+(tree->list-2 rep3)
