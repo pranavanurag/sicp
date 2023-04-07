@@ -138,3 +138,13 @@ rep3
 
 (union-set-btree (list->tree (list 1 3 5 7 9 11)) (list->tree (list 0)))
 (intersection-set-btree (list->tree (list 1 3 5 7 9 11)) (list->tree (list 1 3)))
+
+
+
+(define (lookup given-key set)
+  (cond
+    ((null? set) false)
+    ((= given-key (key (car set))) (car set))
+    ((< given-key (key (car set))) (lookup given-key (left-branch set)))
+    ((> given-key (entry set)) (lookup given-key (right-branch set)))))
+    
