@@ -119,10 +119,22 @@ rep3
         ((> x1 x2) (cons x2 (union-ordered-list set1 (cdr set2))))
         ((< x1 x2) (cons x1 (union-ordered-list (cdr set1) set2))))))))
 
+(define (intersection-ordered-list set1 set2)
+  (if (or (null? set1) (null? set2))
+    '()
+    (let ((x1 (car set1)) (x2 (car set2)))
+      (cond
+        ((= x1 x2) (cons x1 (intersection-ordered-list (cdr set1) (cdr set2))))
+        ((< x1 x2) (intersection-ordered-list (cdr set1) set2))
+        ((< x2 x1) (intersection-ordered-list set1 (cdr set2)))))))
+
 (define (union-set-btree t1 t2)
   (let ((l1 (tree->list-2 t1)) (l2 (tree->list-2 t2)))
     (list->tree (union-ordered-list l1 l2))))
 
+(define (intersection-set-btree t1 t2)
+  (let ((l1 (tree->list-2 t1)) (l2 (tree->list-2 t2)))
+    (list->tree (intersection-ordered-list l1 l2))))
 
-
-(union-set-btree (list->tree (list 1 3 5 7 9 11)) (list->tree (list 1 3 5 7 9 11)))
+(union-set-btree (list->tree (list 1 3 5 7 9 11)) (list->tree (list 0)))
+(intersection-set-btree (list->tree (list 1 3 5 7 9 11)) (list->tree (list 1 3)))
