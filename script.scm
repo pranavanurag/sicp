@@ -28,7 +28,7 @@
     (if (null? bits)
       '()
       (let
-        ((next-branch (c`hoose-branch (car bits) current-branch)))
+        ((next-branch (choose-branch (car bits) current-branch)))
         (if (leaf? next-branch)
           (cons (symbol-leaf next-branch) (decode-1 (cdr bits) tree))
           (decode-1 (cdr bits) next-branch)))))
@@ -56,6 +56,33 @@
     (make-leaf 'A 4)
     (make-code-tree (make-leaf 'B 2) (make-code-tree (make-leaf 'D 1) (make-leaf 'C 1)))))
 
-(define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
+(define (element-of-set? x set)
+  (cond
+    ((null? set) false)
+    ((eq? (car set) x) true)
+    (else (element-of-set? x (cdr set)))))
 
-(decode sample-message sample-tree)
+
+(define (encode-symbol sym tree)
+  ;(newline) (display "encode-symbol invoked with: ") (display sym) (display " ") (display tree)
+  (cond
+    ((leaf? tree)
+      (if (eq? (symbol-leaf tree) sym) '() (error "encode-symbol unknown symbol: " sym)))
+    ((element-of-set? sym (symbols (left-branch tree)))
+      (cons '0 (encode-symbol sym (left-branch tree))))
+    ((element-of-set? sym (symbols (right-branch tree)))
+      (cons '1 (encode-symbol sym (right-branch tree))))))
+
+
+(define (encode message tree)
+  ;(newline) (display "encode invoked with ") (display message) (display tree)
+  (if (null? message)
+    '()
+    (append
+      (encode-symbol (car message) tree)
+      (encode (cdr message) tree))))
+
+
+(encode '(A B C) sample-tree)
+
+(decode '(0 1 0 1 1 1) sample-tree)
