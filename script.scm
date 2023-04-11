@@ -82,7 +82,23 @@
       (encode-symbol (car message) tree)
       (encode (cdr message) tree))))
 
+(define (successive-merge sorted-leaves)
+  (cond
+    ((null? sorted-leaves) '())
+    ((null? (cdr sorted-leaves)) (car sorted-leaves))
+    ((null? (cddr sorted-leaves)) (make-code-tree (car sorted-leaves) (cadr sorted-leaves)))
+    (else
+      (successive-merge
+        (adjoin-set
+          (make-code-tree (car sorted-leaves) (cadr sorted-leaves))
+          (cddr sorted-leaves))))))
 
-(encode '(A B C) sample-tree)
+(define (generate-huffman-tree pairs)
+  (successive-merge (make-leaf-set pairs)))
 
-(decode '(0 1 0 1 1 1) sample-tree)
+(define my-pairs (list (list 'a 4) (list 'b 2) (list 'c 1) (list 'd 1)))
+(generate-huffman-tree my-pairs)
+
+
+
+(make-leaf-set my-pairs)
