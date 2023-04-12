@@ -96,9 +96,38 @@
 (define (generate-huffman-tree pairs)
   (successive-merge (make-leaf-set pairs)))
 
-(define my-pairs (list (list 'a 4) (list 'b 2) (list 'c 1) (list 'd 1)))
-(generate-huffman-tree my-pairs)
+(define song-pairs
+  (list 
+    (list 'A 2)
+    (list 'GET 2)
+    (list 'SHA 3)
+    (list 'WAH 1)
+    (list 'BOOM 1)
+    (list 'JOB 2)
+    (list 'NA 16)
+    (list 'YIP 9)))
+
+(define song-htree (generate-huffman-tree song-pairs))
+
+(define song-message (append
+  (list 'Get 'a 'job)
+  (append
+    (list 'Sha 'na 'na 'na 'na 'na 'na 'na 'na)
+    (append
+      (list 'Get 'a 'job)
+      (append
+        (list 'Sha 'na 'na 'na 'na 'na 'na 'na 'na)
+        (append
+          (list 'Wah 'yip 'yip 'yip 'yip 'yip 'yip 'yip 'yip 'yip)
+          (list 'Sha 'boom)))))))
+
+(length (encode song-message song-htree))
+(length song-message)
+;there are 8 unique symbols
+;using a fixed length encoding, we would need 3 bits to store a symbol
+;number of symbols in the song = 36
+;it would require 36 * 8 = 288 bits
+;we used 84 bits using the huffman encoding
 
 
-
-(make-leaf-set my-pairs)
+(* 36 8)
