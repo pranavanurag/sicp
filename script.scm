@@ -123,6 +123,7 @@
 
 (length (encode song-message song-htree))
 (length song-message)
+
 ;there are 8 unique symbols
 ;using a fixed length encoding, we would need 3 bits to store a symbol
 ;number of symbols in the song = 36
@@ -131,3 +132,23 @@
 
 
 (* 36 8)
+
+
+;0 A
+;10 B
+;100 C
+;1000 D
+;10000 E
+;100000 F
+
+;1 bit is required to encode the most frequent symbol
+;n bits are required to encode the least frequent symbol
+
+;example tree for n = 5
+;                  ({a, b, c, d, e, f}, 31)
+;                        /        \
+;            (leaf a 16)           ({b, c, d, e} 15)
+;                                    /        \
+;                                 (leaf b 8)      ({rest..} (sibling-weight - 1))
+
+;^similar for n = 10
