@@ -1,50 +1,47 @@
-(define (add-complex z1 z2)
-  (make-from-real-imag
-    (+ (real-part z1) (real-part z2))
-    (+ (imag-part z1) (imag-part z2))))
-
-(define (sub-complex z1 z2)
-  (make-from-real-imag
-    (- (real-part z1) (real-part z2))
-    (- (imag-part z1) (imag-part z2))))
-
-(define (mul-complex z1 z2)
-  (make-from-mag-ang
-    (* (magnitude z1) (magnitude z2))
-    (+ (angle z1) (angle z2))))
-
-(define (div-complex z1 z2)
-  (make-from-mag-ang
-    (/ (magnitude z1) (magnitude z2))
-    (- (angle z1) (angle z2))))
-
-(define (real-part z) (car z))
-
-(define (imag-part z) (cdr z))
-
-(define (magnitude z) (sqrt (+ (square (real-part z)) (square (imag-part z)))))
-
-(define (angle z) (atan (imag-part z) (real-part z)))
-
-(define (make-from-real-imag x y) (cons x y))
-
-(define (make-from-mag-ang r a) (cons (* r (cos a)) (* r (sin a))))
+;we dont want to translate all the rules for our system into language
+;our system can understand our rules as is
 
 
+;all differentiation rules are like this:
 
-(define (attach-tag type-tag contents) (cons type-tag contents))
+         (rules)
+pattern ----------> skeleton (with placeholders to create the answer)
 
-(define (type-tag datum)
-  (if (pair? datum)
-    (car datum)
-    (error "Bad tagged datum: TYPE-TAG" datum)))
-
-(define (contents datum)
-  (if (pair? datum)
-    (cdr datum)
-    (error "Bad tagged datum: CONTENTS" datum)))
+   |
+   | (match)
+   |
+   .
+set of expressions
 
 
-(define (rectangular? z) (eq? (type-tag z) 'rectangular))
+pattern match
+foo - matches exactly foo
+(f a b) - matches a list whose first element is f, second element is a, third element is b
+(? x) - matches anything that is, and calls it x
+(?c x) - matches constants, calls it x
+(?v x) - matches variables, calls it x
 
-(define (polar? z) (eq? (type-tag z) 'polar))
+
+skeletons
+foo - instantiates exactly itself
+(f a b) - instantiates to a 3-list which are the **result of instantiating** each of f, a, b
+(:x) - instantitates to the value of x as in the matched pattern (called x during pattern match)
+ 
+
+
+ (define dsimp (simplifier deriv-rules))
+ this procedure simplifier can now take as its input deriv-rules
+ and simplify them -> feed it to the system written
+ this procedure is generic, such that a different system, 
+  for example one to evaulate algebraic expressions
+
+with all these elements - we would have created a language to solve
+  all problems in this class of programs of pattern matching and substitution
+  so we can make up whatever kind of rules we like
+
+=> (dsimp '(dd (+ x y) x))
+; will evaluate to
+; (+ 1 0)
+
+
+ 
