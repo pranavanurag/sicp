@@ -1,22 +1,25 @@
+(define (make-account balance password)
+  (define (withdraw amount)
+    (if (>= balance amount)
+      (begin (set! balance (- balance amount)) balance)
+      "Insufficient funds"))
 
+  (define (deposit amount)
+    (set! balance (+ balance amount))
+    balance)
 
-(define (make-monitored f)
-  (define counter 0)
-  (lambda (prompt)
-    (cond
-      ((equal? prompt 'how-many-calls?) counter)
-      ((equal? prompt 'reset-counter) (set! counter 0))
-      (else
-        (begin
-          (set! counter (+ 1 counter))
-          (f prompt))))))
+  (define (deny amount) "Incorrect password")
+    
+  (define (dispatch p m)
+    (if (eq? password p)
+      (cond
+        ((eq? m 'withdraw) withdraw)
+        ((eq? m 'deposit) deposit)
+        (else (error "Unknown request: MAKE-ACCOUNT" m)))
+      deny))
 
-(define m (make-monitored (lambda (x) (* x x))))
+  dispatch)
 
-(m 10)
-(m 10)
-(m 10)
-(m 'reset-counter)
-(m 10)
-(m 10)
-(m 'how-many-calls?)
+(define myaccount (make-account 100 'king-crimson))
+((myaccount 'king-crimson 'withdraw) 70)
+((myaccount 'aphex-crimson 'withdraw) 100)
