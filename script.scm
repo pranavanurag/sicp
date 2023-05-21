@@ -1,28 +1,15 @@
-x2 = (rand-update 1)
-x3 = (rand-update x2)
+;https://github.com/klutometis/sicp/blob/master/rand-update.scm
+(define modulus (make-parameter (expt 2 64)))
+(define multiplier (make-parameter 6364136223846793005))
+(define increment (make-parameter 1442695040888963407))
 
-(define rand
-  (let ((x random-int))
-    (lambda () (set! x (rand-update x)) x)))
-
-(define (estimate-pi trials)
-  (sqrt (/ 6 (monte-carle trials cesaro-test))))
+(define (rand-update x)
+  (modulo (+ (* (multiplier) x) (increment)) (modulus)))
 
 
-(define (monte-carlo trials experiment)
-  (define (iter trials-remaining trials-passed)
-    (cond
-      ((= trials-remaining 0) (/ trials-passed trials))
-      ((experiment) (iter (-trials-remaining 1) (+ trials-passed 1)));HAHA GOOD LUCK DEFINING AN EXPERIMENT WITH NO ARGUMENTS
-      (else (iter trials-remaining trials-passed))))
-    (iter trials))
-
-(define (estimate-pi trials)
-  (sqrt (/ 6 (random-gcd-test trials random-int))))
-    ;it's annoying to carry this random-int in any kind of monte carlo simulation i want to do
-  ;this should be a detail in the black box "generating random numbers", not leak out
+(define x1 (rand-update 1))
+(define x2 (rand-update x1))
 
 
-(define (random-gcd-test trials random-int)
-  (define iter trials-remaining trials passed x)
-    ())
+(newline) (display x1)
+(newline) (display x2)
