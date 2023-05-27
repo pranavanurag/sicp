@@ -1,15 +1,22 @@
-;https://github.com/klutometis/sicp/blob/master/rand-update.scm
-(define modulus (make-parameter (expt 2 64)))
-(define multiplier (make-parameter 6364136223846793005))
-(define increment (make-parameter 1442695040888963407))
+(define (LCG a c m)
+  (lambda (x)
+    (modulo (+ (* a x) c) m)))
 
-(define (rand-update x)
-  (modulo (+ (* (multiplier) x) (increment)) (modulus)))
+; Define the LCG parameters
+(define a 1664525)
+(define c 1013904223)
+(define m (expt 2 32))
 
+; Define random-init and rand-update functions
+(define random-init 42) ; Seed value
+(define rand-update (LCG a c m))
 
-(define x1 (rand-update 1))
-(define x2 (rand-update x1))
+; Define the rand procedure
+(define rand (let ((x random-init))
+  (lambda ()
+    (set! x (rand-update x))
+    x)))
 
-
-(newline) (display x1)
-(newline) (display x2)
+; Usage example
+(display (rand)) (newline) ; Print a random number
+(display (rand)) (newline) ; Print another random number
