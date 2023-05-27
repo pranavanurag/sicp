@@ -1,10 +1,25 @@
-(require srfi/27)
+(define (random-in-range low high)
+  (let ((range (- high low)))
+    (lambda () (+ low (random range)))))
 
-(define (rand) (random 10000000))
+(define (unit-circle-predicate x-generator y-generator)
+  (let ((x (x-generator)) (y (y-generator)))
+    (<
+      (+ (square (- x 0.5)) (square (- y 0.5)))
+      (square 0.5))))
+  
+(define (estimate-integral predicate x1 x2 y1 y2 trials)
+  (define rect-area (* (- x2 x1) (- y2 y1)))
+  (define (integral-experiment)
+    (predicate (random-in-range x1 x2) (random-in-range y1 y2)))
+  (/ (monte-carlo trials integral-experiment) rect-area))
 
-(define (estimate-pi trials) (sqrt (/ 6 (monte-carlo trials cesaro-test))))
 
-(define (cesaro-test) (= (gcd (rand) (rand)) 1))
+(define (estimate-pi trials)
+  (estimate-integral
+    unit-circle-predicate
+    0.0 1.0 0.0 1.0
+    100000))
 
 (define (monte-carlo trials experiment)
   (define (iter trials-remaining trials-passed)
