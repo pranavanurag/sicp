@@ -5,21 +5,21 @@
 (define (unit-circle-predicate x-generator y-generator)
   (let ((x (x-generator)) (y (y-generator)))
     (<
-      (+ (square (- x 0.5)) (square (- y 0.5)))
-      (square 0.5))))
+      (+ (square (- x 1.0)) (square (- y 1.0)))
+      (square 1.0))))
   
 (define (estimate-integral predicate x1 x2 y1 y2 trials)
   (define rect-area (* (- x2 x1) (- y2 y1)))
   (define (integral-experiment)
     (predicate (random-in-range x1 x2) (random-in-range y1 y2)))
-  (/ (monte-carlo trials integral-experiment) rect-area))
+  (* rect-area (monte-carlo trials integral-experiment)))
 
 
 (define (estimate-pi trials)
   (estimate-integral
     unit-circle-predicate
-    0.0 1.0 0.0 1.0
-    100000))
+    0.0 2.0 0.0 2.0
+    trials))
 
 (define (monte-carlo trials experiment)
   (define (iter trials-remaining trials-passed)
@@ -28,4 +28,4 @@
           (else (iter (- trials-remaining 1) trials-passed))))
     (iter trials 0))
 
-(estimate-pi 10000)
+(estimate-pi 100000)
