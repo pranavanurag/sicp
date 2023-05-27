@@ -1,15 +1,6 @@
-(define (LCG a c m)
-  (lambda (x)
-    (modulo (+ (* a x) c) m)))
+(require srfi/27)
 
-(define a 1664525)
-(define c 1013904223)
-(define m (expt 2 32))
-
-(define random-init 41232) ; Seed value
-(define rand-update (LCG a c m))
-
-(define rand (let ((x random-init)) (lambda () (set! x (rand-update x)) x)))
+(define (rand) (random 10000000))
 
 (define (estimate-pi trials) (sqrt (/ 6 (monte-carlo trials cesaro-test))))
 
@@ -21,6 +12,5 @@
           ((experiment) (iter (- trials-remaining 1) (+ trials-passed 1)))
           (else (iter (- trials-remaining 1) trials-passed))))
     (iter trials 0))
-
 
 (estimate-pi 10000)
