@@ -6,23 +6,20 @@
 (define (rand-update x)
   (modulo (+ (* (multiplier) x) (increment)) (modulus)))
 
-(define (rand mode)
-  (define x 42)
+(define rand
+  (let ((x 42))
+    (lambda (mode)
+      (define generator (begin (set! x (rand-update x)) x))
+      (define (init new-init) (set! x new-init))
 
-  (define generator
-    (begin (set! x (rand-update x))
-    x))
+      (cond
+        ((eq? mode 'generate) generator)
+        ((eq? mode 'reset) init)
+        (else (error "invalid mode" mode))))))
 
-  (define (init new-init)
-    (set! x new-init))
-
-  (cond
-    ((eq? mode 'generate) generator)
-    ((eq? mode 'reset) init)
-    (else (error "invalid mode" mode))))
-
-
+  
 (rand 'generate)
 (rand 'generate)
 (rand 'generate)
+((rand 'reset) 12)
 (rand 'generate)
