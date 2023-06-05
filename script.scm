@@ -1,25 +1,36 @@
-(define modulus (make-parameter (expt 2 64)))
-(define multiplier (make-parameter 6364136223846793005))
-(define increment (make-parameter 1442695040888963407))
+(define (make-account balance password)
+  (define (withdraw amount)
+    (if (>= balance amount)
+      (begin (set! balance (- balance amount)) balance)
+      "Insufficient funds"))
 
-; this rand-update actually sucks, but for this exercise it doesn't really matter 
-(define (rand-update x)
-  (modulo (+ (* (multiplier) x) (increment)) (modulus)))
+  (define (deposit amount)
+    (set! balance (+ balance amount))
+    balance)
 
-(define rand
-  (let ((x 42))
-    (lambda (mode)
-      (define generator (begin (set! x (rand-update x)) x))
-      (define (init new-init) (set! x new-init))
-
+  (define (deny amount) "Incorrect password")
+    
+  (define (dispatch p m)
+    (if (eq? password p)
       (cond
-        ((eq? mode 'generate) generator)
-        ((eq? mode 'reset) init)
-        (else (error "invalid mode" mode))))))
+        ((eq? m 'withdraw) withdraw)
+        ((eq? m 'deposit) deposit)
+        (else (error "Unknown request: MAKE-ACCOUNT" m)))
+      deny))
 
-  
-(rand 'generate)
-(rand 'generate)
-(rand 'generate)
-((rand 'reset) 12)
-(rand 'generate)
+  dispatch)
+
+(define (make-joint master-acc master-password joint-password)
+  (define (proxy p m)
+    (if (eq? joint-password p)
+      (master-acc master-password m)
+      (error "incorrect password!")))
+  proxy)
+
+(define peter-acc (make-account 100 'kingcrimson))
+((peter-acc 'kingcrimson 'withdraw) 10)
+((peter-acc 'kingcrimson 'withdraw) 10)
+((peter-acc 'kingcrimson 'withdraw) 10)
+
+(define proxy-acc (make-joint peter-acc 'kingcrimson 'afx))
+((proxy-acc 'afx 'withdraw) 10)
