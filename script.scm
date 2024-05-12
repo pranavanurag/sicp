@@ -1,27 +1,39 @@
-(define (deriv exp var)
-  (cond
-    ((number? exp ) 0)
-    ((variable? exp) (if (same-variable? exp var) 1 0))
-    (else ((get 'deriv (operator exp)) (operands exp) var))))
+;; the main hindarance in solving 2.73 is the absence of a get and put (to table) as described in the book
 
+(define table '())
 
-;a. conditionals on the kinds of operators that the deriv procedure may handle
-;   are now kept separate from this procedures body
-;b.
-(define (install-deriv-procedures)
-  ((put 'deriv '+ deriv-sum)
-   (put 'deriv '* deriv-product)))
+(define already-exists?
+  (lambda (key)
+    (if (assoc key table) 
+        #t 
+        #f)))
 
-(define (deriv-sum exp var)
-  (make-sum (deriv (addend exp) var)
-            (deriv (augend exp) var)))
+(define update-existing
+  (lambda (key value)
+    (set! table (cons (cons key value) (remove-pair table key)))))
 
-(define (deriv-product exp var)
-  (make-sum (make-product
-             (multiplier exp)
-             (deriv (multiplicand exp) var))
-            (make-product
-             (deriv (multiplier exp) var)
-             (multiplicand exp))))
+(define remove-pair
+  (lambda (table key)
+    (filter (lambda (item) 
+              (not (eq? key (car item)))) 
+            table)))
 
-(install-deriv-procedures)
+(define create-entry
+  (lambda (key value)
+    (set! table (cons (cons key value) table))))
+
+(define put
+  (lambda (key value)
+    (if (already-exists? key)
+        (update-existing key value)
+        (create-entry key value))))
+
+(define get 
+  (lambda (key) 
+    (cdr (assoc key table))))
+
+; this works but the book wants
+;(put ⟨op ⟩ ⟨type ⟩ ⟨item ⟩) installs the ⟨item ⟩ in the table, indexed by the ⟨op ⟩ and the ⟨type ⟩.
+; (get ⟨op ⟩ ⟨type ⟩) looks up the ⟨op ⟩, ⟨type ⟩ entry in the table and returns the item found there. If no item is found, get returns false.
+
+; my key is of a different 'type' WIP
