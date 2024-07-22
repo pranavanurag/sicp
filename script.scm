@@ -119,16 +119,6 @@
     ((polar? z) (angle-polar (contents z)))
     (else (error "Unknown type: ANGLE" z))))
 
+(define (make-from-real-imag x y) (make-from-real-imag-rectangular x y))
+(define (make-from-mag-ang r a) (make-from-mag-ang-polar r a))
 
-(define polar-example (make-from-real-imag-polar 12 13))
-(real-part polar-example)
-(imag-part polar-example)
-(magnitude polar-example)
-(angle polar-example)
-
-
-(define rectangular-example (make-from-real-imag-rectangular 12 13))
-(real-part rectangular-example)
-(imag-part rectangular-example)
-(magnitude rectangular-example)
-(angle rectangular-example)
