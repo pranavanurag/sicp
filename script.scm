@@ -124,3 +124,23 @@
   'done)
 
 (install-polar-package)
+
+(define (apply-generic op . args)
+  (let ((type-tags (map type-tag args)))
+      (let ((proc (get op type-tags)))
+        (if proc (apply proc (map contents args)) (error "kya bol raha hai bhai")))))
+
+        (define (real-part z) (apply-generic 'real-part z)) (define (imag-part z) (apply-generic 'imag-part z)) (define (magnitude z) (apply-generic 'magnitude z)) (define (angle z) (apply-generic 'angle z))
+
+
+(define (make-from-real-imag x y)
+((get 'make-from-real-imag 'rectangular) x y))
+(define (make-from-mag-ang r a)
+((get 'make-from-mag-ang 'polar) r a))
+
+(define rect-example (make-from-real-imag 12 13))
+(define polar-example (make-from-mag-ang 12 13))
+
+(define sum-up (add-complex rect-example polar-example))
+
+sum-up
