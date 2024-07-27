@@ -43,6 +43,13 @@
     ((and (number? a1) (number? a2)) (+ a1 a2))
     (else (list '+ a1 a2))))
 
+(define (make-exponentiation base exponent)
+  (cond
+    ((and (number? exponent) (= exponent 0)) 1)
+    ((and (number? exponent)(= exponent 1)) base)
+    ((and (number? base ) (= base 0)) 0);unless exponent = 0
+    (else (list '** base exponent))))
+
 (define (make-product m1 m2)
   (cond
     ((or (=number? m1 0) (=number? m2 0)) 0)
@@ -62,6 +69,10 @@
 (define (multiplier p) (car p)) ;assume p is operands pair
 (define (multiplicand p) (cadr p)) ;assume p is operands pair
 
+(define (exponentiation? x) (and (pair? x) (eq? (car x) '**)))
+(define (base e) (car e));assume e is pair of operands
+(define (exponent e) (cadr e));assume e is pair of operands
+
 (define (install-deriv-package)
 
   (define (sum-deriv operands var) 
@@ -72,13 +83,21 @@
       (make-product (multiplier operands) (deriv (multiplicand operands) var))
       (make-product (multiplicand operands) (deriv (multiplier operands) var))))
 
+  (define (exponentiation-deriv operands var)
+    (make-product
+      (exponent operands)
+      (make-product
+          (make-exponentiation (base operands) (- (exponent operands) 1))
+          (deriv (base operands) var))))
+
   (put 'deriv '+ sum-deriv)
-  (put 'deriv '* product-deriv))
+  (put 'deriv '* product-deriv)
+  (put 'deriv '** exponentiation-deriv))
 
 (install-deriv-package)
 
 (define (deriv exp var)
-  (display "\nderiv ") (display exp)
+  ;(display "\nderiv ") (display exp)
   (cond
     ((number? exp) 0)
     ((variable? exp) (if (same-variable? exp var) 1 0))
@@ -89,3 +108,9 @@
 (define (operands exp) (cdr exp))
 
 (deriv '(* (+ x y) (+ x 3)) 'x)
+
+(define expr (make-exponentiation 'x 13))
+(exponentiation? expr)
+(sum? expr)
+
+(deriv expr 'x)
