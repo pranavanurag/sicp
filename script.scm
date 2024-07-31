@@ -35,9 +35,38 @@
 
 ;; functions above this comment are assumed and not a part of current exercise
 
+
+;; suppose that each division's personnel records consist of a single file
+;; which contains a set of records keyed on employees’ names
+;; the structure of the set varies from division to division
+;; (this means that the implementation of `set` used should be different in our example)
+
+;; set implementation for Division 1. set is structured as an unordered list
+(define (element-of-set-div-1? x set)
+  (cond
+    ((null? set) false)
+    ((equal? x (car set)) true)
+    (else (element-of-set-div-1? x (cdr set)))))
+
+(define (adjoin-set-div-1 x set)
+  (if (element-of-set-div-1? x set)
+      set
+      (cons x set)))
+
+(define (lookup-div-1 given-key set-of-records)
+  (cond
+    ((null? set-of-records) false)
+    ((equal? given-key (key (car set-of-records))) (car set-of-records))
+    (else (lookup given-key (cdr set-of-records)))))
+
+
+;; set implementation 2. set is structured as an ordered list
+
+
+
 ;; as an illustration, I am going to assume that Division 1 of Insatiable Enterprises
 ;; stores (cons address salary)
-(define (make-record-div-1 add sal) (cons add sal))
+(define (make-record-div-1 emp-id-div-1 add sal) (list  add sal))
 (define (address-div-1 record-div-1) (car (record-div-1)))
 (define (salary-div-1 record-div-1) (cdr (record-div-1)))
 
