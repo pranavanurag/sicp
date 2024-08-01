@@ -40,25 +40,17 @@
 ;; which contains a set of records keyed on employees’ names
 ;; the structure of the set varies from division to division
 ;; (this means that the implementation of `set` used should be different in our example)
+;; I am not going to write out two set implementations and use them to create example datasets
+;; borrowing from code_report on youtube, I am going to use qouted lists to create data
 
-;; set implementation for Division 1. set is structured as an unordered list
-(define (element-of-set-div-1? x set)
-  (cond
-    ((null? set) false)
-    ((equal? x (car set)) true)
-    (else (element-of-set-div-1? x (cdr set)))))
+(define set-of-records-div-1
+  (list
+    '("id1" 100 "Mumbai")
+    '("id2" 120 "Delhi")))
 
-(define (adjoin-set-div-1 x set)
-  (if (element-of-set-div-1? x set)
-      set
-      (cons x set)))
 
-(define (lookup-div-1 given-key set-of-records)
-  (cond
-    ((null? set-of-records) false)
-    ((equal? given-key (key (car set-of-records))) (car set-of-records))
-    (else (lookup given-key (cdr set-of-records)))))
 
+(car set-of-records-div-1)
 
 ;; set implementation 2. set is structured as an ordered list
 
