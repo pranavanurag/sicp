@@ -43,37 +43,28 @@
 ;; I am not going to write out two set implementations and use them to create example datasets
 ;; borrowing from code_report on youtube, I am going to use qouted lists to create data
 
+
+;; a record here is a list stored against a key which is the ID of that record
 (define set-of-records-div-1
   (list
-    '("id1" 100 "Mumbai")
-    '("id2" 120 "Delhi")))
+    '("id1" ("name1" 120 "address1"))
+    '("id2" ("name2" 150 "address2"))
+    '("id3" ("name3" 170 "address3"))))
 
+;; a record here is a list with the id as the first element of the record list
+(define set-of-records-div-2
+  (list
+    '("id20" "addr20" "name20" 140)
+    '("id21" "addr21" "name21" 143)
+    '("id22" "addr22" "name22" 160)
+))
 
+(define (key-div-1 record) (car record))
+(define (get-record-div-1 given-key set-of-records)
+  (newline) (display (key-div-1 (car set-of-records)))
+  (cond
+    ((null? set-of-records) #f)
+    ((equal? (key-div-1 (car set-of-records)) given-key) (car set-of-records))
+    (else (get-record-div-1 given-key (cdr set-of-records)))))
 
-(car set-of-records-div-1)
-
-;; set implementation 2. set is structured as an ordered list
-
-
-
-;; as an illustration, I am going to assume that Division 1 of Insatiable Enterprises
-;; stores (cons address salary)
-(define (make-record-div-1 emp-id-div-1 add sal) (list  add sal))
-(define (address-div-1 record-div-1) (car (record-div-1)))
-(define (salary-div-1 record-div-1) (cdr (record-div-1)))
-
-;; for contrast, let's assume that Division 2 of Insatiable Enterprises
-;; stores (cons salary address)
-(define (make-record-div-2 sal add) (cons sal add))
-(define (salary-div-2 record-div-2) (car (record-div-2)))
-(define (address-div-2 record-div-2) (cdr (record-div-2)))
-
-
-;; a) just give me the set bro. and just tag yo data. that's it
-;; ok you will also need to give me your procedures for salary and address
-(define (install-div-1)
-  (define (address-div-1 record-div-1) (car (record-div-1)))
-  (define (salary-div-1 record-div-1) (cdr (record-div-1)))
-  (put 'div-1 'salary salary-div-1)
-  (put 'div-1 'address address-div-1)
-  (put 'div-1 'file ))
+(get-record-div-1 "id1" set-of-records-div-1)
