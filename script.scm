@@ -44,20 +44,13 @@
 ;; borrowing from code_report on youtube, I am going to use qouted lists to create data
 
 
+;; division 1
 ;; a record here is a list stored against a key which is the ID of that record
 (define set-of-records-div-1
   (list
-    '("id1" ("name1" 120 "address1"))
-    '("id2" ("name2" 150 "address2"))
-    '("id3" ("name3" 170 "address3"))))
-
-;; a record here is a list with the id as the first element of the record list
-(define set-of-records-div-2
-  (list
-    '("id20" "addr20" "name20" 140)
-    '("id21" "addr21" "name21" 143)
-    '("id22" "addr22" "name22" 160)
-))
+    '("Pranav Anurag" ("M" 120 "address1"))
+    '("Surabhi Anurag" ("F" 150 "address2"))
+    '("Anurag Subhash" ("M" 170 "address3"))))
 
 (define (key-div-1 record) (car record))
 (define (get-record-div-1 given-key set-of-records)
@@ -66,5 +59,22 @@
     ((null? set-of-records) #f)
     ((equal? (key-div-1 (car set-of-records)) given-key) (car set-of-records))
     (else (get-record-div-1 given-key (cdr set-of-records)))))
-
 (get-record-div-1 "id1" set-of-records-div-1)
+
+
+;; division 2
+;; a record here is a list with the id as the first element of the record list
+(define set-of-records-div-2
+  (list
+    '(("Anvita" "Anurag") "addr20" "name20" 140)
+    '( "addr21" "name21" 143)
+    '("id22" "addr22" "name22" 160)))
+
+(define (key-div-2 record) (car record))
+(define (get-record-div-2 given-key set-of-records)
+  (newline) (display (key-div-1 (car set-of-records)))
+  (cond
+    ((null? set-of-records) #f)
+    ((equal? (key-div-1 (car set-of-records)) given-key) (car set-of-records))
+    (else (get-record-div-1 given-key (cdr set-of-records)))))
+(get-record-div-2 "id20" set-of-records-div-2)
