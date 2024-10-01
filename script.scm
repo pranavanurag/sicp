@@ -71,12 +71,11 @@
 
 (define (key-div-2 record) (car record))
 (define (get-record-div-2 given-key set-of-records)
-  (newline) (display (key-div-1 (car set-of-records)))
+  ; (newline) (display (key-div-1 (car set-of-records)))
   (cond
     ((null? set-of-records) #f)
     ((equal? (key-div-1 (car set-of-records)) given-key) (car set-of-records))
     (else (get-record-div-1 given-key (cdr set-of-records)))))
-(get-record-div-2 "id20" set-of-records-div-2)
 
 (put 'get-record 'div-1 get-record-div-1)
 (put 'get-record 'div-2 get-record-div-2)
@@ -85,3 +84,4 @@
   ((get 'get-record div-id) record-id set-of-records))
 
 (get-record 'div-1 "Pranav Anurag" set-of-records-div-1)
+(get-record 'div-2 "id20" set-of-records-div-2)
