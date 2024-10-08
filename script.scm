@@ -45,43 +45,66 @@
 
 
 ;; division 1
-;; a record here is a list stored against a key which is the ID of that record
+;; a record here is a list of pairs (identifier . value) stored against a key (name of the employee)
 (define set-of-records-div-1
   (list
-    '("Pranav Anurag" ("M" 120 "address1"))
-    '("Surabhi Anurag" ("F" 150 "address2"))
-    '("Anurag Subhash" ("M" 170 "address3"))))
+    '("Pranav Anurag" . ((sex . "M") (salary . 120) (address . "address1")))
+    '("Anurag Subhash" . ((sex . "M") (salary . 420) (address . "address1_0")))
+    '("Anvita Anurag" . ((sex . "F") (salary . 220) (address . "address1_1")))))
 
-(define (key-div-1 record) (car record))
+(define (key-div-1 kv-record) (car kv-record))
+(define (record-div-1 kv-record) (cdr kv-record))
+
 (define (get-record-div-1 given-key set-of-records)
   (cond
-    ((or (null? set-of-records) (eq? set-of-records '())) #f)
-    ((equal? (key-div-1 (car set-of-records)) given-key) (car set-of-records))
-    (else (get-record-div-1 given-key (cdr set-of-records)))))
-(get-record-div-1 "Pranav Anurag" set-of-records-div-1)
-
-
-;; division 2
-;; a record here is a list with the id as the first element of the record list
-(define set-of-records-div-2
-  (list
-    '("id20" "addr20" "name20" 420)
-    '("id21" "addr21" "name21" 143)
-    '("id22" "addr22" "name22" 160)))
-
-(define (key-div-2 record) (car record))
-(define (get-record-div-2 given-key set-of-records)
-  ; (newline) (display (key-div-1 (car set-of-records)))
-  (cond
     ((null? set-of-records) #f)
-    ((equal? (key-div-1 (car set-of-records)) given-key) (car set-of-records))
+    ((equal? (key-div-1 (car set-of-records)) given-key) (record-div-1 (car set-of-records)))
     (else (get-record-div-1 given-key (cdr set-of-records)))))
 
-(put 'get-record 'div-1 get-record-div-1)
-(put 'get-record 'div-2 get-record-div-2)
+(define (get-field-div-1 field-name record)
+  ; (newline) (display "------") (display record) (newline)
+  (cond
+    ((null? record) #f)
+    ((equal? field-name (caar record)) (cdar record))
+    (else (get-field-div-1 field-name (cdr record)))))
 
-(define (get-record div-id record-id set-of-records)
-  ((get 'get-record div-id) record-id set-of-records))
+(define (get-salary-div-1 record) (get-field-div-1 'salary record))
+(define (get-address-div-1 record) (get-field-div-1 'address record))
+(define (get-sex-div-1 record) (get-field-div-1 'sex record))
 
-(get-record 'div-1 "Pranav Anurag" set-of-records-div-1)
-(get-record 'div-2 "id20" set-of-records-div-2)
+(define papa-record (get-record-div-1 "Anurag Subhash" set-of-records-div-1))
+(get-salary-div-1 papa-record)
+(get-sex-div-1 papa-record)
+(get-address-div-1 papa-record)
+
+; ;; division 2
+; ;; a record here is a list with the id as the first element of the record list
+; (define set-of-records-div-2
+;   (list
+;     '("id20" "addr20" "name20" 420)
+;     '("id21" "addr21" "name21" 143)
+;     '("id22" "addr22" "name22" 160)))
+
+; (define (key-div-2 record) (car record))
+; (define (get-record-div-2 given-key set-of-records)
+;   ; (newline) (display (key-div-1 (car set-of-records)))
+;   (cond
+;     ((null? set-of-records) #f)
+;     ((equal? (key-div-1 (car set-of-records)) given-key) (car set-of-records))
+;     (else (get-record-div-1 given-key (cdr set-of-records)))))
+
+; (put 'get-record 'div-1 get-record-div-1)
+; (put 'get-record 'div-2 get-record-div-2)
+
+; (define (get-record div-id record-id set-of-records)
+;   ((get 'get-record div-id) record-id set-of-records))
+
+; (get-record 'div-1 "Pranav Anurag" set-of-records-div-1)
+; (get-record 'div-2 "id20" set-of-records-div-2)
+
+; ;; for a) each division must supply a function to get a record
+
+; (define (get-salary record)
+; ;there should be a type-tag to figure out which division this record is from
+; ;call appropriate method to find salary (division specific)
+;   ())
