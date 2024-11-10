@@ -25,27 +25,14 @@
     dispatch))
 
 (define operation-table (make-table))
+(define get (operation-table 'lookup-proc))
+(define put (operation-table 'insert-proc!))
 
-(define (get key-1 key-2)
-  ((operation-table 'lookup-proc) key-1 key-2))
+(define (attach-tag type-tag contents) (cons type-tag contents))
+(define (type-tag tagged-data) (car tagged-data))
+(define (contents tagged-data) (cdr tagged-data))
 
-(define (put key-1 key-2 value)
-  ((operation-table 'insert-proc!) key-1 key-2 value))
-
-
-;; functions above this comment are assumed and not a part of current exercise
-
-
-;; suppose that each division's personnel records consist of a single file
-;; which contains a set of records keyed on employees’ names
-;; the structure of the set varies from division to division
-;; (this means that the implementation of `set` used should be different in our example)
-;; I am not going to write out two set implementations and use them to create example datasets
-;; borrowing from code_report on youtube, I am going to use qouted lists to create data
-
-
-;; division 1
-;; a record here is a list of pairs (identifier . value) stored against a key (name of the employee)
+;;;;;;;;;;;
 (define set-of-records-div-1
   (list
     '("Pranav Anurag" . ((sex . "M") (salary . 120) (address . "address1")))
@@ -54,57 +41,74 @@
 
 (define (key-div-1 kv-record) (car kv-record))
 (define (record-div-1 kv-record) (cdr kv-record))
-
 (define (get-record-div-1 given-key set-of-records)
   (cond
     ((null? set-of-records) #f)
     ((equal? (key-div-1 (car set-of-records)) given-key) (record-div-1 (car set-of-records)))
     (else (get-record-div-1 given-key (cdr set-of-records)))))
 
-(define (get-field-div-1 field-name record)
-  ; (newline) (display "------") (display record) (newline)
+(define (field-getter-div-1 field-name)
+  (lambda (record)
+    (define (field-finder field-name record-iterator)
+      (cond
+        ((null? record-iterator) #f)
+        ((eq? field-name (caar record-iterator)) (cdar record-iterator))
+        (else (field-finder field-name (cdr record-iterator)))))
+    (field-finder field-name record)))
+
+(define tagged-records-div-1 (attach-tag 'div1 set-of-records-div-1))
+(put 'get-record 'div1 get-record-div-1)
+(put 'get-salary 'div1 (field-getter-div-1 'salary))
+(put 'get-address 'div1 (field-getter-div-1 'address))
+(put 'get-gender 'div1 (field-getter-div-1 'sex))
+
+;;;;;;;;;;;
+(define set-of-records-div-2
+  (list
+    '(("Pranav" "Anurag") . ((salary . 140) (addr . "address_2_0") (gender . "M")))
+    '(("Some" "Dude") . ((salary . 130) (addr . "address_2_1") (gender . "F")))
+    '(("Some" "Other" "Dude") . ((salary . 110) (addr . "address_2_2") (gender . "M")))))
+
+(define (key-div-2 kv-record) (car kv-record))
+(define (record-div-2 kv-record) (cdr kv-record))
+(define (get-record-div-2 given-key set-of-records)
   (cond
-    ((null? record) #f)
-    ((equal? field-name (caar record)) (cdar record))
-    (else (get-field-div-1 field-name (cdr record)))))
+    ((null? set-of-records) #f)
+    ((equal? (key-div-2 (car set-of-records)) given-key) (record-div-2 (car set-of-records)))
+    (else (get-record-div-2 given-key (cdr set-of-records)))))
 
-(define (get-salary-div-1 record) (get-field-div-1 'salary record))
-(define (get-address-div-1 record) (get-field-div-1 'address record))
-(define (get-sex-div-1 record) (get-field-div-1 'sex record))
+; this happens to be the same procedure as field-getter-div-1 but I could possibly change the way I store properties in div2 and change this method only. and everything will work just fine
+(define (field-getter-div-2 field-name)
+  (lambda (record)
+    (define (field-finder field-name record-iterator)
+      (cond
+        ((null? record-iterator) #f)
+        ((eq? field-name (caar record-iterator)) (cdar record-iterator))
+        (else (field-finder field-name (cdr record-iterator)))))
+    (field-finder field-name record)))
 
-(define papa-record (get-record-div-1 "Anurag Subhash" set-of-records-div-1))
-(get-salary-div-1 papa-record)
-(get-sex-div-1 papa-record)
-(get-address-div-1 papa-record)
+(define tagged-records-div-2 (attach-tag 'div2 set-of-records-div-2))
+(put 'get-record 'div2 get-record-div-2)
+(put 'get-salary 'div2 (field-getter-div-2 'salary))
+(put 'get-address 'div2 (field-getter-div-2 'addr))
+(put 'get-gender 'div2 (field-getter-div-2 'gender))
 
-; ;; division 2
-; ;; a record here is a list with the id as the first element of the record list
-; (define set-of-records-div-2
-;   (list
-;     '("id20" "addr20" "name20" 420)
-;     '("id21" "addr21" "name21" 143)
-;     '("id22" "addr22" "name22" 160)))
+;;;;;;;;;;;
+(define (get-record name file)
+  (let ((proc (get 'get-record (type-tag file))))
+    (if proc
+        (proc name (contents file))
+        (error "Unknown division type"))))
 
-; (define (key-div-2 record) (car record))
-; (define (get-record-div-2 given-key set-of-records)
-;   ; (newline) (display (key-div-1 (car set-of-records)))
-;   (cond
-;     ((null? set-of-records) #f)
-;     ((equal? (key-div-1 (car set-of-records)) given-key) (car set-of-records))
-;     (else (get-record-div-1 given-key (cdr set-of-records)))))
+(define (field-getter field-getter-id)
+  (lambda (name file)
+    (let ((division-type (type-tag file))
+          (record (get-record name file)))
+      ((get field-getter-id division-type) record))))
 
-; (put 'get-record 'div-1 get-record-div-1)
-; (put 'get-record 'div-2 get-record-div-2)
+(define get-salary (field-getter 'get-salary))
+(define get-gender (field-getter 'get-gender))
+(define get-address (field-getter 'get-address))
 
-; (define (get-record div-id record-id set-of-records)
-;   ((get 'get-record div-id) record-id set-of-records))
 
-; (get-record 'div-1 "Pranav Anurag" set-of-records-div-1)
-; (get-record 'div-2 "id20" set-of-records-div-2)
-
-; ;; for a) each division must supply a function to get a record
-
-; (define (get-salary record)
-; ;there should be a type-tag to figure out which division this record is from
-; ;call appropriate method to find salary (division specific)
-;   ())
+(get-gender "Pranav Anurag" tagged-records-div-1)
